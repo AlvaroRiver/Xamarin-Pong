@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\SOURCES\\C#Sources\\XamarinPong\\XamarinPong\\XamarinPong.csproj": {}
+    "E:\\SOURCES\\C#Sources\\XamarinPong\\Xamarin-Pong\\XamarinPong.csproj": {}
   },
   "projects": {
-    "E:\\SOURCES\\C#Sources\\XamarinPong\\XamarinPong\\XamarinPong.csproj": {
+    "E:\\SOURCES\\C#Sources\\XamarinPong\\Xamarin-Pong\\XamarinPong.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\SOURCES\\C#Sources\\XamarinPong\\XamarinPong\\XamarinPong.csproj",
+        "projectUniqueName": "E:\\SOURCES\\C#Sources\\XamarinPong\\Xamarin-Pong\\XamarinPong.csproj",
         "projectName": "XamarinPong",
-        "projectPath": "E:\\SOURCES\\C#Sources\\XamarinPong\\XamarinPong\\XamarinPong.csproj",
+        "projectPath": "E:\\SOURCES\\C#Sources\\XamarinPong\\Xamarin-Pong\\XamarinPong.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "E:\\SOURCES\\C#Sources\\XamarinPong\\XamarinPong\\obj\\",
+        "outputPath": "E:\\SOURCES\\C#Sources\\XamarinPong\\Xamarin-Pong\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [

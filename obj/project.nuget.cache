@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pOIZY1rMlJcW37FYR683MglCvr5aVBVvjk4VUvkwxjjx4S3GKVjSNT6jqubMTIXVr9VTwtKi46RaQc4W1qMh7Q==",
+  "dgSpecHash": "hbLUvtYwEmqy6S2j6T2czu/pepIiIVrFstlUQ3DW/WA8tcASp/Ta/cpaasnLgqu7qGse3XoxW6+rw1WGOWY/Cw==",
   "success": true,
-  "projectFilePath": "E:\\SOURCES\\C#Sources\\XamarinPong\\XamarinPong\\XamarinPong.csproj",
+  "projectFilePath": "E:\\SOURCES\\C#Sources\\XamarinPong\\Xamarin-Pong\\XamarinPong.csproj",
   "expectedPackageFiles": [
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.arch.core.common\\1.1.1.3\\xamarin.android.arch.core.common.1.1.1.3.nupkg.sha512",
     "C:\\Microsoft\\Xamarin\\NuGet\\xamarin.android.arch.core.runtime\\1.1.1.3\\xamarin.android.arch.core.runtime.1.1.1.3.nupkg.sha512",

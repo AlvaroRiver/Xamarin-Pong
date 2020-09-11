@@ -11,34 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/imgBackground"
-        android:padding="25dp" />
-   
-    <ImageView
-        android:padding="5dp"
-        android:layout_margin="25dp"
-        android:src="#ffffffff"
-        android:layout_width="20dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/imgLeftPlayer"
-        android:id="@+id/imgLeftPlayer" />
-
-    <ImageView
-        android:padding="5dp"
-        android:layout_margin="25dp"
-        android:src="#ffffffff"
-        android:layout_width="20dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/imgRightPlayer"
-       android:layout_alignParentRight="true"
-        android:id="@+id/imgRightPlayer" />
-    <ImageView
-        android:src="#ffffffff"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_below="@id/imgBall"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/imgBall" />
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:text="0 - 0"
@@ -49,10 +22,37 @@
         android:layout_above="@id/txtScore"
         android:id="@+id/txtScore"
         android:textSize="20dp"
-        android:textColor="#ffffffff"/>
-    
+        android:textColor="#ffffffff"
+        android:background="#ff000000" />
+    <ImageView
+        android:src="#ffffffff"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:padding="5px"
+        android:layout_below="@id/txtScore"
+        android:id="@+id/imgLeftPlayer" />
+
+    <ImageView
+        android:src="#ffffffff"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:padding="5px"
+        android:layout_below="@id/txtScore"
+        android:layout_alignParentRight="true"
+        android:id="@+id/imgRightPlayer" />
+
+    <ImageView
+        android:src="#ffffffff"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/txtScore"
+        android:layout_centerInParent="true"
+        android:id="@+id/imgBall" />
     
 
 
+
+    
+    
 
 </RelativeLayout>
