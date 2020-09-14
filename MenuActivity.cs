@@ -30,8 +30,8 @@ namespace XamarinPong
 
             playButton.Click += (e, o) =>
             {
-                Intent game = new Intent(this, typeof(GameActivity));
-                StartActivity(game);
+             
+               
             };
 
             settingsButton.Click += (e, o) =>
