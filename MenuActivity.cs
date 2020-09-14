@@ -5,19 +5,16 @@ using Android.Runtime;
 using Android.Widget;
 using Android.Content.PM;
 using Android.Views;
+using Android.Content;
 
 namespace XamarinPong
 {
-    [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.Landscape)]
-    public class MainActivity : AppCompatActivity
+    [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", MainLauncher = true)]
+    public class MenuActivity : AppCompatActivity
     {
 
         //Menu items
         Button playButton, settingsButton, exitButton;
-
-        //Pong items
-        private ImageView leftPlayer, rightPlayer, ball, background;
-        private TextView score;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,12 +28,24 @@ namespace XamarinPong
             settingsButton = FindViewById<Button>(Resource.Id.btnSettings);
             exitButton = FindViewById<Button>(Resource.Id.btnExit);
 
-            playButton.Click += (e, o) => SetContentView(Resource.Layout.game_screen);
-               
-          
+            playButton.Click += (e, o) =>
+            {
+                //Start game
+            };
+
+            settingsButton.Click += (e, o) =>
+            {
+                Intent settings = new Intent(this, typeof(Settings));
+                StartActivity(settings);
+            };
+
+            exitButton.Click += (exitButton, o) => 
+            {
+                var activity = (Activity)this;
+                activity.FinishAffinity();
+            };
              
         }
-
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

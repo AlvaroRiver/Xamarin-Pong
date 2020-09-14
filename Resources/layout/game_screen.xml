@@ -39,6 +39,7 @@
         android:padding="5px"
         android:layout_below="@id/txtScore"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:id="@+id/imgRightPlayer" />
 
     <ImageView
