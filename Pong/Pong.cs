@@ -12,13 +12,13 @@ namespace MonoGameTest
         private GraphicsDeviceManager _graphics;
         private SpriteBatch mainBatch;
         private Agent leftPlayer, rightPlayer, humanPlayer, AIplayer, ball;
-        private SpriteFont scoreFont;
+        private SpriteFont scoreFont, debugFont;
         private int leftPlayerScore, rightPlayerScore, gameScore;
-        private Vector2 scorePosition;
-        private int Sensivity = 5, pauseTime, AIspeed = 9;
+        private Vector2 scorePosition, debugStringPosition;
+        private int Sensivity = 5;
         private TouchCollection touchCollection;
-        private float ballSpeed = 18f, momentumInfluence = 0.1f, maxVerticalRatio = 1.25f, currentSpeedMod = 1f, speedGain = 1.02f;
-        private bool pause = false;
+        private float AIspeed, ballSpeed = 18f, momentumInfluence = 0.1f, maxVerticalRatio = 1.25f, currentSpeedMod = 1f, speedGain = 1.02f;
+        private bool pause = false, debugMode = false;
         private Color themeColor;
         private string difficulty = "Normal";
 
@@ -36,7 +36,8 @@ namespace MonoGameTest
         protected override void Initialize()
         {
             base.Initialize();
-            scorePosition = new Vector2(ScreenWidth / 2, 10);
+            scorePosition = new Vector2(ScreenWidth / 2 - 100 , 10);
+            debugStringPosition = new Vector2(0, ScreenHeight - 24);
             readSettings();
 
             //Aliases for specializing behaviour, we can set human at left or right paddle
@@ -47,6 +48,8 @@ namespace MonoGameTest
             ball.generateBallDirection();
             adjustBallDirection();
 
+            debugMode = true;
+
         }
 
         protected override void LoadContent()
@@ -54,6 +57,7 @@ namespace MonoGameTest
             mainBatch = new SpriteBatch(GraphicsDevice);
            
             scoreFont = Content.Load<SpriteFont>("Score");
+            debugFont = Content.Load<SpriteFont>("DebugFont");
                             
 
             leftPlayer = new Agent(new Point(0, ScreenHeight/2), //Center vertically
@@ -78,7 +82,7 @@ namespace MonoGameTest
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (pause) return;
+                if (pause) return;
 
             humanPlayerMovement();
             ballMovement();
@@ -91,13 +95,17 @@ namespace MonoGameTest
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(themeColor);
-
             mainBatch.Begin();
 
             leftPlayer.Draw(mainBatch);
             rightPlayer.Draw(mainBatch);
             ball.Draw(mainBatch);
             mainBatch.DrawString(scoreFont, leftPlayerScore + "  |  " + rightPlayerScore + " " + difficulty + "\nScore: " + gameScore, scorePosition, Color.White);
+            
+            if(debugMode)
+            mainBatch.DrawString(debugFont, 
+            ScreenWidth + "x" + ScreenHeight + " LeftPlayerMomentum:" + leftPlayer.momentum + " RightPlayerMomentum:" + rightPlayer.momentum + " BallDir:" + ball.direction
+            ,debugStringPosition, Color.White);
 
             mainBatch.End();
 
@@ -137,7 +145,7 @@ namespace MonoGameTest
         public void AIPlayerMovement()
         {
           
-            int displacement = (ball.Y - AIplayer.Center.Y);
+            float displacement = (ball.Y - AIplayer.Center.Y);
 
             //Prevent movement from being too sudden
             if (displacement > AIspeed)
@@ -160,27 +168,27 @@ namespace MonoGameTest
             //Collision check
             if(ball.Center.Y >= leftPlayer.Center.Y-leftPlayer.Height/2 && ball.Center.Y <= leftPlayer.Center.Y + leftPlayer.Height/2
                 && ball.Center.X < leftPlayer.Width + ball.Width/2)
-                {
+            {
                     ball.direction.X = -ball.direction.X;
                     ball.direction.Y = -leftPlayer.momentum * momentumInfluence;
-                adjustBallDirection();
-                currentSpeedMod *= speedGain; //Increase speed each time
-                ball.X = leftPlayer.X + leftPlayer.Width;
-                if (humanPlayer == leftPlayer)
-                    gameScore += AIspeed;
+                    adjustBallDirection();
+                    currentSpeedMod *= speedGain; //Increase speed each time
+                    ball.X = leftPlayer.X + leftPlayer.Width;
+                    if (humanPlayer == leftPlayer)
+                        gameScore += Settings.Difficulty;
                 
             }
 
            if (ball.Center.Y >= rightPlayer.Center.Y - rightPlayer.Height / 2 && ball.Center.Y <= rightPlayer.Center.Y + rightPlayer.Height / 2
                 && ball.Center.X > rightPlayer.Center.X -ball.Width/2 - rightPlayer.Width/2)
-                {
+           {
                     ball.direction.X = -ball.direction.X;
                     ball.direction.Y = -rightPlayer.momentum * momentumInfluence;
-                adjustBallDirection();
-                currentSpeedMod *= speedGain; //Increase speed each time
-                ball.X = rightPlayer.X - ball.Width;
-                if (humanPlayer == rightPlayer)
-                    gameScore += AIspeed;
+                    adjustBallDirection();
+                    currentSpeedMod *= speedGain; //Increase speed each time
+                    ball.X = rightPlayer.X - ball.Width;
+                    if (humanPlayer == rightPlayer)
+                    gameScore += Settings.Difficulty;
 
             }
 
@@ -217,14 +225,14 @@ namespace MonoGameTest
             {
                 rightPlayerScore++;
                 if (humanPlayer == rightPlayer)
-                    gameScore += AIspeed * 10; ;
+                    gameScore += Settings.Difficulty * 10; 
                 Reset();
             }
             else if (ball.X > ScreenWidth - ball.Width)
             {
                 leftPlayerScore++;
                 if (humanPlayer == leftPlayer)
-                    gameScore += AIspeed *10;
+                    gameScore += Settings.Difficulty * 10;
                 Reset();
             }
 
@@ -246,10 +254,10 @@ namespace MonoGameTest
             themeColor = new Color(Settings.R, Settings.G, Settings.B);
             switch (Settings.Difficulty)
             {
-                case 1 : { AIspeed = 8; difficulty = "Easy"; } break;
-                case 2 : { AIspeed = 10; difficulty = "Normal"; } break;
-                case 3 : { AIspeed = 12; difficulty = "Hard"; }break;
-                default: { AIspeed = 10; difficulty = "Normal"; } break;
+                case 1 : { AIspeed = ScreenHeight * 0.01f; difficulty = "Easy"; } break;
+                case 2 : { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
+                case 3 : { AIspeed = ScreenHeight * 0.014f; difficulty = "Hard"; }break;
+                default: { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
             }
         }
     }

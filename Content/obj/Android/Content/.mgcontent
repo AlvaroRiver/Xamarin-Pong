@@ -4,11 +4,13 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/Images/ball.png</File>
-    <File>C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/Images/paddle.png</File>
-    <File>C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/Score.spritefont</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/DebugFont.spritefont</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/ball.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/paddle.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Score.spritefont</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

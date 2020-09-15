@@ -10,7 +10,7 @@ namespace MonoGameTest
         private Texture2D sprite;
         private Rectangle collision;
         public Vector2 direction;
-        public int momentum;
+        public float momentum;
         private Random random;
 
         public int Width { get => collision.Width; }
@@ -31,10 +31,10 @@ namespace MonoGameTest
             random = new Random();
         }
 
-        public void Translate(int x, int y)
+        public void Translate(float x, float y)
         {
-            momentum = y;
-            collision.Offset(new Point(x, y));
+            momentum = (int)y;
+            collision.Offset(x,y);
    
         }
 

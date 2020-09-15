@@ -1,4 +1,5 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/Images/ball.png","C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/bin/Android/Content/Images/ball.xnb","TextureProcessor","Texture2DContent",8368,16469,0.161685
-"C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/Images/paddle.png","C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/bin/Android/Content/Images/paddle.xnb","TextureProcessor","Texture2DContent",134,485,0.0018963
-"C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/Score.spritefont","C:/Users/Alvaro/source/repos/MonoGameTest/XamarinPong/Content/bin/Android/Content/Score.xnb","FontDescriptionProcessor","SpriteFontContent",2008,267298,0.1144634
+"C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/DebugFont.spritefont","C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/bin/Android/Content/DebugFont.xnb","FontDescriptionProcessor","SpriteFontContent",2011,136226,0.2772336
+"C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/ball.png","C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/bin/Android/Content/Images/ball.xnb","TextureProcessor","Texture2DContent",8368,16469,0.1670545
+"C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/paddle.png","C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/bin/Android/Content/Images/paddle.xnb","TextureProcessor","Texture2DContent",134,485,0.0029504
+"C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Score.spritefont","C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/bin/Android/Content/Score.xnb","FontDescriptionProcessor","SpriteFontContent",2068,267298,0.1207906

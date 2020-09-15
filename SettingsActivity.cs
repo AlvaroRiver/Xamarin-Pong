@@ -5,6 +5,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
@@ -14,7 +15,7 @@ using Android.Widget;
 
 namespace MonoGameTest
 {
-	[Activity(Label = "Settings", Theme = "@style/AppTheme")]
+	[Activity(Label = "Settings", Theme = "@style/AppTheme", ScreenOrientation = ScreenOrientation.Sensor)]
 	public class SettingsActivity : Activity
 	{
 		RadioButton easy, normal, hard;
