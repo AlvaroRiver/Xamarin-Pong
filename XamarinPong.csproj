@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="GameActivity.cs" />
     <Compile Include="MenuActivity.cs" />
+    <Compile Include="Pong\Ball.cs" />
     <Compile Include="Pong\Pong.cs" />
     <Compile Include="Pong\Agent.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -65,7 +66,15 @@
     <Compile Include="SettingsActivity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\Drawable\Icon.png" />
+    <AndroidResource Include="Resources\Drawable\Icon.png">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\Layout\main_menu.xml" />
+    <AndroidResource Include="Resources\Layout\settings.xml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
     <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -95,18 +104,10 @@
     <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\Layout\main_menu.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\Values\colors.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Values\styles.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\Layout\settings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

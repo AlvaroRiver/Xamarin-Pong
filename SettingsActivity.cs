@@ -7,6 +7,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.Graphics.Drawable;
@@ -20,8 +21,9 @@ namespace MonoGameTest
 	{
 		RadioButton easy, normal, hard;
 		ToggleButton audioToggle;
-		SeekBar redBar, greenBar, blueBar;
+		SeekBar redBar, greenBar, blueBar, playerSelect, ballSelect;
 		ImageView imgPreview;
+		TextView txtPlayerSelect, txtBallSelect;
 
 
 		protected override void OnCreate(Bundle savedInstanceState)
@@ -37,7 +39,13 @@ namespace MonoGameTest
 			greenBar = FindViewById<SeekBar>(Resource.Id.seekBarGreen);
 			blueBar = FindViewById<SeekBar>(Resource.Id.seekBlue);
 			imgPreview = FindViewById<ImageView>(Resource.Id.imgThemePreview);
+			playerSelect = FindViewById<SeekBar>(Resource.Id.seekBarPlayer);
+			ballSelect = FindViewById<SeekBar>(Resource.Id.seekBarBall);
+			txtPlayerSelect = FindViewById<TextView>(Resource.Id.txtPlayerSelect);
+			txtBallSelect = FindViewById<TextView>(Resource.Id.txtBallSelect);
 
+			//Preserve settings after switching screens
+			loadSettings();
 
 			easy.CheckedChange += (e, o) =>
 			{
@@ -82,6 +90,71 @@ namespace MonoGameTest
 				imgPreview.SetColorFilter(new Color(redBar.Progress, greenBar.Progress, blueBar.Progress));
 			};
 
+			playerSelect.ProgressChanged += (e, o) =>
+			{
+				Settings.player = playerSelect.Progress;
+				switch (playerSelect.Progress)
+				{
+					case 0: { Settings.player = 0; txtPlayerSelect.Text = "Player model: Metallic"; } break;
+					case 1: { Settings.player = 1; txtPlayerSelect.Text = "Player model: Laser"; } break;
+					case 2: { Settings.player = 2; txtPlayerSelect.Text = "Player model: Plank"; } break;
+					default: { Settings.player = 0; txtPlayerSelect.Text = "Player model: Meteor"; } break;
+				}
+
+			};
+
+			ballSelect.ProgressChanged += (e, o) =>
+			{
+				Settings.ball = ballSelect.Progress;
+				switch (ballSelect.Progress)
+				{
+					case 0: { Settings.ball = 0; txtBallSelect.Text = "Ball model: Meteor"; } break;
+					case 1: { Settings.ball = 1; txtBallSelect.Text = "Ball model: Football"; } break;
+					case 2: { Settings.ball = 2; txtBallSelect.Text = "Ball model: Cannonball"; } break;
+					default: { Settings.ball = 0; txtBallSelect.Text = "Ball model: Meteor"; } break;
+				}
+			};
+
+
+
+		}
+
+		public void loadSettings()
+        {
+
+			switch (Settings.Difficulty)
+			{
+				case 1: easy.Checked = true; break;
+				case 2: normal.Checked = true; break;
+				case 3: hard.Checked = true; break;
+				default: normal.Checked = true; break;
+			}
+
+			audioToggle.Checked = Settings.Audio;
+
+			redBar.Progress = Settings.R;
+			greenBar.Progress = Settings.G;
+			blueBar.Progress = Settings.B;
+			playerSelect.Progress = Settings.player;
+			ballSelect.Progress = Settings.ball;
+
+			switch (Settings.player)
+			{
+				case 0: { playerSelect.Progress = 0; txtPlayerSelect.Text = "Player model: Metallic"; } break;
+				case 1: { playerSelect.Progress = 1; txtPlayerSelect.Text = "Player model: Laser"; } break;
+				case 2: { playerSelect.Progress = 2; txtPlayerSelect.Text = "Player model: Plank"; } break;
+				default: { playerSelect.Progress = 0; txtPlayerSelect.Text = "Player model: Metallic"; } break;
+			}
+
+			switch (Settings.ball)
+			{
+				case 0: { ballSelect.Progress = 0; txtBallSelect.Text = "Ball model: Meteor"; } break;
+				case 1: { ballSelect.Progress = 1; txtBallSelect.Text = "Ball model: Football"; } break;
+				case 2: { ballSelect.Progress = 2; txtBallSelect.Text = "Ball model: Cannonball"; } break;
+				default: { ballSelect.Progress = 0; txtBallSelect.Text = "Ball model: Meteor"; } break;
+			}
+
+			imgPreview.SetColorFilter(new Color(redBar.Progress, greenBar.Progress, blueBar.Progress));
 		}
 	}
 }

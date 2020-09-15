@@ -8,13 +8,6 @@
     android:layout_height="match_parent"
     android:padding="40px"
     android:id="@+id/linearLayout1">
-    <TextView
-        android:text="Xamarin Pong"
-        android:textSize="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:id="@+id/textView1" />
     <Button
         android:text="Play"
         android:layout_width="match_parent"

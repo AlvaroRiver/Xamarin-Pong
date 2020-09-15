@@ -11,16 +11,19 @@ namespace MonoGameTest
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch mainBatch;
-        private Agent leftPlayer, rightPlayer, humanPlayer, AIplayer, ball;
+        private Agent leftPlayer, rightPlayer, humanPlayer, AIplayer;
+        private Ball ball;
         private SpriteFont scoreFont, debugFont;
         private int leftPlayerScore, rightPlayerScore, gameScore;
         private Vector2 scorePosition, debugStringPosition;
         private int Sensivity = 5;
         private TouchCollection touchCollection;
-        private float AIspeed, ballSpeed = 18f, momentumInfluence = 0.1f, maxVerticalRatio = 1.25f, currentSpeedMod = 1f, speedGain = 1.02f;
+        private float AIspeed, ballSpeed = 18f, momentumInfluence = 0.05f, maxVerticalRatio = 1.25f, currentSpeedMod = 1f, speedGain = 1.02f;
         private bool pause = false, debugMode = false;
         private Color themeColor;
         private string difficulty = "Normal";
+        private string playerSprite = "Paddle1", ballSprite = "Ball1";
+        private Random random;
 
         public int ScreenWidth => _graphics.GraphicsDevice.Viewport.Width;
         public int ScreenHeight => _graphics.GraphicsDevice.Viewport.Height;
@@ -31,14 +34,15 @@ namespace MonoGameTest
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
         }
 
         protected override void Initialize()
         {
             base.Initialize();
+            random = new Random();
             scorePosition = new Vector2(ScreenWidth / 2 - 100 , 10);
             debugStringPosition = new Vector2(0, ScreenHeight - 24);
-            readSettings();
 
             //Aliases for specializing behaviour, we can set human at left or right paddle
             humanPlayer = leftPlayer;
@@ -48,12 +52,13 @@ namespace MonoGameTest
             ball.generateBallDirection();
             adjustBallDirection();
 
-            debugMode = true;
+            //debugMode = true;
 
         }
 
         protected override void LoadContent()
         {
+            readSettings();
             mainBatch = new SpriteBatch(GraphicsDevice);
            
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -62,17 +67,17 @@ namespace MonoGameTest
 
             leftPlayer = new Agent(new Point(0, ScreenHeight/2), //Center vertically
                 new Point(ScreenWidth/30, ScreenHeight/5),        //Scale according to screen dimensions
-                Content.Load<Texture2D>("Images/paddle"));
+                Content.Load<Texture2D>("Images/" + playerSprite));
             leftPlayer.Translate(0, -leftPlayer.Height / 2); //Adjust player position
 
             rightPlayer = new Agent(new Point(ScreenWidth, ScreenHeight / 2 - leftPlayer.Height / 2), 
                 new Point(ScreenWidth / 30, ScreenHeight / 5),                             
-                Content.Load<Texture2D>("Images/paddle"));
+                Content.Load<Texture2D>("Images/" + playerSprite));
             rightPlayer.Translate(-rightPlayer.Width , -leftPlayer.Width / 2); 
 
-            ball = new Agent(new Point(ScreenWidth/2, ScreenHeight/2),
+            ball = new Ball(new Point(ScreenWidth/2, ScreenHeight/2),
                     new Point(ScreenWidth / 30, ScreenWidth / 30),
-                    Content.Load<Texture2D>("Images/ball"));
+                    Content.Load<Texture2D>("Images/" + ballSprite));
 
 
         }
@@ -170,7 +175,8 @@ namespace MonoGameTest
                 && ball.Center.X < leftPlayer.Width + ball.Width/2)
             {
                     ball.direction.X = -ball.direction.X;
-                    ball.direction.Y = -leftPlayer.momentum * momentumInfluence;
+                    //Add some randomness to bounce direction
+                    ball.direction.Y = -leftPlayer.momentum * momentumInfluence + (float)random.NextDouble() * 0.5f - 0.25f;
                     adjustBallDirection();
                     currentSpeedMod *= speedGain; //Increase speed each time
                     ball.X = leftPlayer.X + leftPlayer.Width;
@@ -238,11 +244,12 @@ namespace MonoGameTest
 
             adjustBallDirection();
             ball.direction.Normalize();
-            ball.Translate(ball.direction * ballSpeed);
+            ball.Translate(ball.direction * ballSpeed * currentSpeedMod);
 
         }
 
-        public void adjustBallDirection() //We want the ball to move mostyle horizontally
+        //We want the ball to move mostly horizontally
+        public void adjustBallDirection() 
         {
             if (ball.direction.Y / ball.direction.X > maxVerticalRatio)
                 if (ball.direction.Y < 0) ball.direction.Y = -ball.direction.X * maxVerticalRatio;
@@ -258,6 +265,22 @@ namespace MonoGameTest
                 case 2 : { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
                 case 3 : { AIspeed = ScreenHeight * 0.014f; difficulty = "Hard"; }break;
                 default: { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
+            }
+
+            switch (Settings.player)
+            {
+                case 0: playerSprite = "Paddle1"; break;
+                case 1: playerSprite = "Paddle2"; break;
+                case 2: playerSprite = "Paddle3"; break;
+                default: playerSprite = "Paddle2"; break;
+            }
+
+           switch (Settings.ball)
+            {
+                case 0: ballSprite = "Ball1"; break;
+                case 1: ballSprite = "Ball2"; break;
+                case 2: ballSprite = "Ball3"; break;
+                default: ballSprite = "Ball2"; break;
             }
         }
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Alvaro/source/repos/MonoGameTest/MonoGameTest/Content/Images/ball.png</SourceFile>
-  <SourceTime>2020-09-14T20:24:42.3703167+02:00</SourceTime>
-  <DestFile>C:/Users/Alvaro/source/repos/MonoGameTest/MonoGameTest/Content/bin/Android/Images/ball.xnb</DestFile>
-  <DestTime>2020-09-14T22:41:29.6775237+02:00</DestTime>
+  <SourceFile>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/ball.png</SourceFile>
+  <SourceTime>2020-09-15T12:53:42.143565+02:00</SourceTime>
+  <DestFile>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/bin/Android/Images/ball.xnb</DestFile>
+  <DestTime>2020-09-15T17:43:20.1341392+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

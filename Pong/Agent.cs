@@ -7,12 +7,10 @@ namespace MonoGameTest
 {
     class Agent
     {
-        private Texture2D sprite;
-        private Rectangle collision;
-        public Vector2 direction;
+        protected Texture2D sprite;
+        protected Rectangle collision;
         public float momentum;
-        private Random random;
-
+        
         public int Width { get => collision.Width; }
         public int Height { get => collision.Height; }
         public int Y { get => collision.Y; set => collision.Y = value; }
@@ -28,43 +26,28 @@ namespace MonoGameTest
         {
             this.sprite = sprite;
             collision = new Rectangle(position, size);
-            random = new Random();
         }
 
         public void Translate(float x, float y)
         {
-            momentum = (int)y;
+            momentum = y;
             collision.Offset(x,y);
-   
         }
 
         public void Translate(Vector2 vector)
         {
-            momentum = (int)vector.Y;
+            momentum = vector.Y;
             collision.Offset(vector);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sprite, new Rectangle(collision.X, collision.Y, collision.Width, collision.Height), new Rectangle(0, 0, sprite.Width, sprite.Height), Color.White);
+            spriteBatch.Draw(sprite, new Rectangle(collision.Location, collision.Size), new Rectangle(0,0, sprite.Width, sprite.Height), Color.White);
         }
-
-        public void Draw(SpriteBatch spriteBatch, Color tint)
-        {
-            Draw(spriteBatch, tint);
-        }
-
-        public void generateBallDirection()
-        {
-            direction = new Vector2((float)random.NextDouble() - 0.5f, ((float)random.NextDouble()) - 0.5f * 0.5f);
-        }
-
+        
         public void decayMomentum()
         {
-            if (momentum > 0)
-                momentum--;
-            else if (momentum < 0)
-                momentum++;
+            momentum -= 0.0001f;  
         }
 
     }
