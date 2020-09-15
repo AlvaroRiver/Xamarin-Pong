@@ -33,19 +33,21 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
+            android:checked="false"
             android:text="Easy"
             android:id="@+id/radioEasy" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Normal"
-            android:id="@+id/radioNormal" />
+            android:id="@+id/radioNormal"
+            android:checked="true" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hard"
-            android:id="@+id/radioHard" />
+            android:id="@+id/radioHard"
+            android:checked="false" />
     </RadioGroup>
 
 
@@ -81,21 +83,30 @@
         android:layout_marginVertical="5dp"
         android:id="@+id/seekBarRed"
         android:thumbTint="#ffb71c1c"
-        android:max="255" />
+        android:max="239"
+        android:progress="100" />
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seekBarGreen"
         android:layout_marginVertical="5dp"
         android:thumbTint="#ff43a047"
-        android:max="255" />
+        android:max="239"
+        android:progress="149" />
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seekBlue"
         android:layout_marginVertical="5dp"
         android:thumbTint="#ff2979ff"
-        android:max="255"/>
+        android:max="239"
+        android:progress="237" />
+    <ImageView
+        android:src="#ff6493ef"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/imgThemePreview" />
 
 
 

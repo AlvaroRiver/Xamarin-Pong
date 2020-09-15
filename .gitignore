@@ -1,8 +1,0 @@
-bin/
-debug/
-obj/.cache/com.companyname.xamarinpong.flag
-obj/project.assets.json
-obj/project.nuget.cache
-obj/XamarinPong.csproj.nuget.dgspec.json
-obj/XamarinPong.csproj.nuget.g.props
-obj/XamarinPong.csproj.nuget.g.targets

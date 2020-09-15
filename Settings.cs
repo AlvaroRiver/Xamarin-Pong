@@ -10,27 +10,12 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace XamarinPong
+namespace MonoGameTest
 {
-	[Activity(Label = "Settings", Theme = "@style/AppTheme")]
-	public class Settings : Activity
-	{
-		RadioButton easy, normal, hard;
-		ToggleButton audioToggle;
-
-		protected override void OnCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-
-			SetContentView(Resource.Layout.settings);
-			easy = FindViewById<RadioButton>(Resource.Id.radioEasy);
-			normal = FindViewById<RadioButton>(Resource.Id.radioNormal);
-			hard = FindViewById<RadioButton>(Resource.Id.radioHard);
-			audioToggle = FindViewById<ToggleButton>(Resource.Id.toggleAudio);
-
-
-
-
-		}
-	}
+    class Settings
+    {
+        public static bool Audio = true;
+        public static int R = 100, G = 149, B = 247;
+        public static int Difficulty = 2;
+    }
 }

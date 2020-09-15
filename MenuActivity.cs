@@ -1,16 +1,19 @@
-﻿using Android.App;
-using Android.OS;
-using Android.Support.V7.App;
-using Android.Runtime;
-using Android.Widget;
-using Android.Content.PM;
-using Android.Views;
-using Android.Content;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace XamarinPong
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Runtime;
+using Android.Views;
+using Android.Widget;
+
+namespace MonoGameTest
 {
     [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MenuActivity : AppCompatActivity
+    public class MenuActivity : Android.Support.V7.App.AppCompatActivity
     {
 
         //Menu items
@@ -30,22 +33,23 @@ namespace XamarinPong
 
             playButton.Click += (e, o) =>
             {
-             
-               
+
+                Intent game = new Intent(this, typeof(GameActivity));
+                StartActivity(game);
             };
 
             settingsButton.Click += (e, o) =>
             {
-                Intent settings = new Intent(this, typeof(Settings));
+                Intent settings = new Intent(this, typeof(SettingsActivity));
                 StartActivity(settings);
             };
 
-            exitButton.Click += (exitButton, o) => 
+            exitButton.Click += (exitButton, o) =>
             {
                 var activity = (Activity)this;
                 activity.FinishAffinity();
             };
-             
+
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
