@@ -8,12 +8,16 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using Java.Lang;
 
 namespace MonoGameTest
 {
-    [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", ScreenOrientation =ScreenOrientation.Sensor , MainLauncher = true)]
+    [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", 
+        ScreenOrientation =ScreenOrientation.Sensor , LaunchMode = LaunchMode.SingleInstance,
+        MainLauncher = true)]
     public class MenuActivity : Android.Support.V7.App.AppCompatActivity
     {
 
@@ -34,7 +38,6 @@ namespace MonoGameTest
 
             playButton.Click += (e, o) =>
             {
-
                 Intent game = new Intent(this, typeof(GameActivity));
                 StartActivity(game);
             };
@@ -49,6 +52,7 @@ namespace MonoGameTest
             {
                 var activity = (Activity)this;
                 activity.FinishAffinity();
+                
             };
 
         }
@@ -58,6 +62,17 @@ namespace MonoGameTest
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            if (Pong.inBackground)
+                playButton.Text = "Resume";
+            else
+                playButton.Text = "Play";
+        
+                
         }
     }
 }

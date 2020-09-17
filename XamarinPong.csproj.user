@@ -3,6 +3,6 @@
   <PropertyGroup>
     <SelectedDevice>nexus_5_pie_9_0_-_api_28</SelectedDevice>
     <DefaultDevice>nexus_5_pie_9_0_-_api_28</DefaultDevice>
-    <AndroidDesignerPreferredDevice>Nexus 4</AndroidDesignerPreferredDevice>
+    <AndroidDesignerPreferredDevice>Nexus 5</AndroidDesignerPreferredDevice>
   </PropertyGroup>
 </Project>

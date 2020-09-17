@@ -3,7 +3,7 @@
   <SourceFile>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/ball.png</SourceFile>
   <SourceTime>2020-09-15T12:53:42.143565+02:00</SourceTime>
   <DestFile>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/bin/Android/Images/ball.xnb</DestFile>
-  <DestTime>2020-09-15T17:43:20.1341392+02:00</DestTime>
+  <DestTime>2020-09-17T13:11:28.8441658+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

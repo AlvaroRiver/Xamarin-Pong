@@ -5,7 +5,7 @@ using System;
 
 namespace MonoGameTest
 {
-    class Agent
+    public class Agent
     {
         protected Texture2D sprite;
         protected Rectangle collision;

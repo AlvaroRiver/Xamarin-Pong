@@ -17,7 +17,7 @@ namespace MonoGameTest
     {
         public static bool Audio = true;
         public static int R = 100, G = 149, B = 247;
-        public static int Difficulty = 2;
-        public static int player = 0, ball = 0;
+        public static int Difficulty = 2, Sensivity = 5;
+        public static int player = 0, ball = 0, maxScore = 5;
     }
 }

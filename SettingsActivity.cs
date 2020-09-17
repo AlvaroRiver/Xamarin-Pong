@@ -16,14 +16,14 @@ using Android.Widget;
 
 namespace MonoGameTest
 {
-	[Activity(Label = "Settings", Theme = "@style/AppTheme", ScreenOrientation = ScreenOrientation.Sensor)]
+	[Activity(Label = "Settings", Theme = "@style/AppTheme", LaunchMode = LaunchMode.SingleInstance, ScreenOrientation = ScreenOrientation.Sensor)]
 	public class SettingsActivity : Activity
 	{
 		RadioButton easy, normal, hard;
 		ToggleButton audioToggle;
-		SeekBar redBar, greenBar, blueBar, playerSelect, ballSelect;
+		SeekBar redBar, greenBar, blueBar, playerSelect, ballSelect, sensivityBar, maxScore;
 		ImageView imgPreview;
-		TextView txtPlayerSelect, txtBallSelect;
+		TextView txtPlayerSelect, txtBallSelect, txtMaxScore;
 
 
 		protected override void OnCreate(Bundle savedInstanceState)
@@ -43,6 +43,9 @@ namespace MonoGameTest
 			ballSelect = FindViewById<SeekBar>(Resource.Id.seekBarBall);
 			txtPlayerSelect = FindViewById<TextView>(Resource.Id.txtPlayerSelect);
 			txtBallSelect = FindViewById<TextView>(Resource.Id.txtBallSelect);
+			sensivityBar = FindViewById<SeekBar>(Resource.Id.seekBarSensivity);
+			maxScore = FindViewById<SeekBar>(Resource.Id.seekBarMaxScore);
+			txtMaxScore = FindViewById<TextView>(Resource.Id.txtMaxScore);
 
 			//Preserve settings after switching screens
 			loadSettings();
@@ -90,6 +93,11 @@ namespace MonoGameTest
 				imgPreview.SetColorFilter(new Color(redBar.Progress, greenBar.Progress, blueBar.Progress));
 			};
 
+			sensivityBar.ProgressChanged += (e, o) =>
+			{
+				Settings.Sensivity = sensivityBar.Progress;
+			};
+
 			playerSelect.ProgressChanged += (e, o) =>
 			{
 				Settings.player = playerSelect.Progress;
@@ -115,8 +123,12 @@ namespace MonoGameTest
 				}
 			};
 
+			maxScore.ProgressChanged += (e, o) =>
+			{
+				Settings.maxScore = maxScore.Progress;
+				txtMaxScore.Text = "Max game points: " + maxScore.Progress;
 
-
+			};
 		}
 
 		public void loadSettings()
@@ -137,6 +149,10 @@ namespace MonoGameTest
 			blueBar.Progress = Settings.B;
 			playerSelect.Progress = Settings.player;
 			ballSelect.Progress = Settings.ball;
+			sensivityBar.Progress = Settings.Sensivity;
+			maxScore.Progress = Settings.maxScore;
+
+			txtMaxScore.Text = "Max game points: " + maxScore.Progress;
 
 			switch (Settings.player)
 			{
@@ -156,5 +172,7 @@ namespace MonoGameTest
 
 			imgPreview.SetColorFilter(new Color(redBar.Progress, greenBar.Progress, blueBar.Progress));
 		}
+
+		
 	}
 }
