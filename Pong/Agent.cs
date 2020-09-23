@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 
-namespace MonoGameTest
+namespace XamarinPong
 {
     public class Agent
     {

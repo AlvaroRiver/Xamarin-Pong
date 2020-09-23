@@ -14,9 +14,9 @@ using Android.Support.V4.Graphics.Drawable;
 using Android.Views;
 using Android.Widget;
 
-namespace MonoGameTest
+namespace XamarinPong
 {
-	[Activity(Label = "Settings", Theme = "@style/AppTheme", LaunchMode = LaunchMode.SingleInstance, ScreenOrientation = ScreenOrientation.Sensor)]
+	[Activity(Label = "Settings", Theme = "@style/AppTheme", Icon = "@drawable/icon", LaunchMode = LaunchMode.SingleInstance, ScreenOrientation = ScreenOrientation.Sensor)]
 	public class SettingsActivity : Activity
 	{
 		RadioButton easy, normal, hard;

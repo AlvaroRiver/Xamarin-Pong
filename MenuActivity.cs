@@ -6,6 +6,7 @@ using System.Text;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V7.App;
@@ -13,9 +14,9 @@ using Android.Views;
 using Android.Widget;
 using Java.Lang;
 
-namespace MonoGameTest
+namespace XamarinPong
 {
-    [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", 
+    [Activity(Label = "Xamarin Pong", Theme = "@style/AppTheme", Icon = "@drawable/icon",
         ScreenOrientation =ScreenOrientation.Sensor , LaunchMode = LaunchMode.SingleInstance,
         MainLauncher = true)]
     public class MenuActivity : Android.Support.V7.App.AppCompatActivity
@@ -35,6 +36,7 @@ namespace MonoGameTest
             playButton = FindViewById<Button>(Resource.Id.btnPlay);
             settingsButton = FindViewById<Button>(Resource.Id.btnSettings);
             exitButton = FindViewById<Button>(Resource.Id.btnExit);
+          
 
             playButton.Click += (e, o) =>
             {

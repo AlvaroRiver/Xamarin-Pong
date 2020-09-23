@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace MonoGameTest
+namespace XamarinPong
 {
     [Activity(
         Label = "@Xamarin Pong",
@@ -50,9 +50,8 @@ namespace MonoGameTest
 
         protected override void OnStop()
         {
-
-            FinishAffinity();
             base.OnStop();
+            FinishAffinity();
 
         }
 

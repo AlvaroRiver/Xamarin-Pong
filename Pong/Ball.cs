@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 
 
-namespace MonoGameTest
+namespace XamarinPong
 {
     class Ball : Agent
     {

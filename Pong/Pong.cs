@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Xml;
 
-namespace MonoGameTest
+namespace XamarinPong
 {
     public class Pong : Microsoft.Xna.Framework.Game
     {
@@ -58,7 +58,7 @@ namespace MonoGameTest
             ball.generateBallDirection();
             adjustBallDirection();
 
-            debugMode = true;
+            //debugMode = true;
 
         }
 
@@ -104,7 +104,9 @@ namespace MonoGameTest
                 Exit();
             }
 
-
+            if (gameTime.TotalGameTime.Seconds == 0)
+                resumeTime = 1;
+            
             if (!pause && gameTime.TotalGameTime.Seconds > resumeTime)
             {
                 if (mustReset) Reset();
@@ -309,15 +311,13 @@ namespace MonoGameTest
             }
             else
                 prompt = pointText;
-      
-     
-                
-
         }
 
         public void pauseForTime(GameTime gameTime, int seconds)
         {
-            resumeTime = (gameTime.TotalGameTime.Seconds + seconds) % 59;
+            
+            resumeTime = (gameTime.TotalGameTime.Seconds + seconds) % 60;
+            
         }
 
         public void readSettings()
