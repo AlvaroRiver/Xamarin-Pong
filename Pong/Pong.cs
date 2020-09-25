@@ -24,10 +24,10 @@ namespace XamarinPong
         private float AIspeed, ballSpeed = 18f, momentumInfluence = 0.05f, maxVerticalRatio = 1.25f, currentSpeedMod = 1f, speedGain = 1.02f;
         private bool pause = false, debugMode = false, mustReset = false, resetGame = false;
         private Color themeColor;
-        private string difficulty = "Normal", playerSprite = "Paddle1", ballSprite = "Ball1", pointText = "Point!", winText ="You win!", loseText= "Game over\nYou Lose", prompt ="";
+        private string difficulty = "Normal", playerSprite = "Paddle1", ballSprite = "Ball1", 
+            pointText = "Point!", winText ="You win!", loseText= "Game over\nYou Lose", prompt ="";
         private Texture2D fieldSprite;
         private Random random;
-
 
 
         public int ScreenWidth => _graphics.GraphicsDevice.Viewport.Width;
@@ -39,34 +39,30 @@ namespace XamarinPong
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            
         }
 
         protected override void Initialize()
         {
             base.Initialize();
+            readSettings();
             random = new Random();
             scorePosition = new Vector2(ScreenWidth / 2 - ScreenWidth / 20, 10);
             debugStringPosition = new Vector2(0, ScreenHeight - 24);
             promtPosition = new Vector2(ScreenWidth /2 - ScreenWidth/20, ScreenHeight / 2);
 
-            //Aliases for specializing behaviour, we can set human at left or right paddle
-            humanPlayer = leftPlayer;
-            AIplayer = rightPlayer;
-
             //Initial ball direction
             ball.generateBallDirection();
             adjustBallDirection();
 
-            //debugMode = true;
+            debugMode = true;
 
         }
 
         protected override void LoadContent()
         {
-            readSettings();
+            
             mainBatch = new SpriteBatch(GraphicsDevice);
-           
+            readSettings();
             scoreFont = Content.Load<SpriteFont>("Score");
             promptFont = Content.Load<SpriteFont>("Prompt");
             debugFont = Content.Load<SpriteFont>("DebugFont");
@@ -86,10 +82,6 @@ namespace XamarinPong
             ball = new Ball(new Point(ScreenWidth/2, ScreenHeight/2),
                     new Point(ScreenWidth / 30, ScreenWidth / 30),
                     Content.Load<Texture2D>("Images/" + ballSprite));
-
-            
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -100,7 +92,6 @@ namespace XamarinPong
             //Handle Android back button
             if (GamePad.GetState(0).IsButtonDown(Buttons.Back))
             {
-
                 Exit();
             }
 
@@ -114,10 +105,7 @@ namespace XamarinPong
                 ballMovement(gameTime);
                 AIPlayerMovement();
                 BallInteraction();
-                
             }
-            
-
         }
 
         protected override void Draw(GameTime gameTime)
@@ -133,7 +121,7 @@ namespace XamarinPong
             mainBatch.DrawString(promptFont, prompt, promtPosition, Color.Black);
             if(debugMode)
             mainBatch.DrawString(debugFont, 
-            ScreenWidth + "x" + ScreenHeight + " LPMomentum:" + leftPlayer.momentum + " RPMomentum:" + rightPlayer.momentum + " BallDir:" + ball.direction + "Elapsed-Resume: " + gameTime.TotalGameTime.Seconds + "-" + resumeTime
+            ScreenWidth + "x" + ScreenHeight + " Model:" + playerSprite + " RPModel:" + rightPlayer.sprite.Name + " BallDir:" + ball.direction + "Elapsed-Resume: " + gameTime.TotalGameTime.Seconds + "-" + resumeTime
             ,debugStringPosition, Color.Black);
 
             mainBatch.End();
@@ -187,14 +175,14 @@ namespace XamarinPong
                     (displacement < 0 && AIplayer.Y <= 0))
                 displacement = 0;
                 
-                AIplayer.Translate(0, displacement);
+            AIplayer.Translate(0, displacement);
             
         }
 
         public void BallInteraction()
         {
             //Collision check
-            if(ball.Center.Y >= leftPlayer.Center.Y-leftPlayer.Height/2 && ball.Center.Y <= leftPlayer.Center.Y + leftPlayer.Height/2
+            if(ball.Center.Y >= leftPlayer.Center.Y-leftPlayer.Height/2 && ball.Center.Y <= leftPlayer.Center.Y + leftPlayer.Height/2 
                 && ball.Center.X < leftPlayer.Width + ball.Width/2)
             {
                     ball.direction.X = -ball.direction.X;
@@ -208,9 +196,9 @@ namespace XamarinPong
                 
             }
 
-           if (ball.Center.Y >= rightPlayer.Center.Y - rightPlayer.Height / 2 && ball.Center.Y <= rightPlayer.Center.Y + rightPlayer.Height / 2
+            if (ball.Center.Y >= rightPlayer.Center.Y - rightPlayer.Height / 2 && ball.Center.Y <= rightPlayer.Center.Y + rightPlayer.Height / 2
                 && ball.Center.X > rightPlayer.Center.X -ball.Width/2 - rightPlayer.Width/2)
-           {
+            {
                     ball.direction.X = -ball.direction.X;
                     ball.direction.Y = -rightPlayer.momentum * momentumInfluence;
                     adjustBallDirection();
@@ -239,6 +227,9 @@ namespace XamarinPong
 
         public void ResetGame()
         {
+            if(gameScore > Settings.highScore) 
+                Settings.highScore = gameScore;
+
             resetGame = false;
             leftPlayerScore = rightPlayerScore = gameScore = 0;
         }
@@ -270,15 +261,18 @@ namespace XamarinPong
             adjustBallDirection();
             ball.direction.Normalize();
             ball.Translate(ball.direction * ballSpeed * currentSpeedMod);
-
         }
 
         //We want the ball to move mostly horizontally
         public void adjustBallDirection()
         {
             if (ball.direction.Y / ball.direction.X > maxVerticalRatio)
-                if (ball.direction.Y < 0) ball.direction.Y = -ball.direction.X * maxVerticalRatio;
-                else ball.direction.Y = ball.direction.X * maxVerticalRatio;
+            {
+                if (ball.direction.Y < 0)
+                    ball.direction.Y = -ball.direction.X * maxVerticalRatio;
+                else
+                    ball.direction.Y = ball.direction.X * maxVerticalRatio;
+            }
         }
 
         public void ScorePoint(GameTime gameTime, Agent player)
@@ -295,18 +289,24 @@ namespace XamarinPong
             {
                 rightPlayerScore++;
                 if (humanPlayer == rightPlayer)
+                {
                     gameScore += Settings.Difficulty * 10;
+                }
+                   
                 pauseForTime(gameTime, 1);
             }
 
             if ((leftPlayer == humanPlayer && leftPlayerScore == gamePoints) || (rightPlayer == humanPlayer && rightPlayerScore == gamePoints))
             {
-                prompt = winText;
+                if(gameScore > Settings.highScore)
+                    prompt = winText + "\n New highscore: " + gameScore;
                 resetGame = true;
+                
             }
             else if ((leftPlayer == AIplayer && leftPlayerScore == gamePoints) || (rightPlayer == AIplayer && rightPlayerScore == gamePoints))
             {
-                prompt = loseText;
+                if (gameScore > Settings.highScore)
+                    prompt = loseText + "\n New highscore: " + gameScore;
                 resetGame = true;
             }
             else
@@ -325,6 +325,18 @@ namespace XamarinPong
             themeColor = new Color(Settings.R, Settings.G, Settings.B, 122);
             Sensivity = 10 - Settings.Sensivity;
             gamePoints = Settings.maxScore;
+
+            if(!Settings.RightPaddle)
+            {
+                humanPlayer = leftPlayer;
+                AIplayer = rightPlayer;
+            }
+            else
+            {
+                AIplayer = leftPlayer;
+                humanPlayer = rightPlayer;
+            }
+
             switch (Settings.Difficulty)
             {
                 case 1 : { AIspeed = ScreenHeight * 0.01f; difficulty = "Easy"; } break;
@@ -338,7 +350,7 @@ namespace XamarinPong
                 case 0: playerSprite = "Paddle1"; break;
                 case 1: playerSprite = "Paddle2"; break;
                 case 2: playerSprite = "Paddle3"; break;
-                default: playerSprite = "Paddle2"; break;
+                default: playerSprite = "Paddle1"; break;
             }
 
            switch (Settings.ball)
@@ -346,7 +358,7 @@ namespace XamarinPong
                 case 0: ballSprite = "Ball1"; break;
                 case 1: ballSprite = "Ball2"; break;
                 case 2: ballSprite = "Ball3"; break;
-                default: ballSprite = "Ball2"; break;
+                default: ballSprite = "Ball1"; break;
             }
         }
     }

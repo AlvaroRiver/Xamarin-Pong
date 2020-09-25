@@ -24,6 +24,7 @@ namespace XamarinPong
     {
         private Pong pong;
         private View pongView;
+
   
         protected override void OnCreate(Bundle bundle)
         {

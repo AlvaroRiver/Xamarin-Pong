@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -23,12 +23,17 @@ namespace XamarinPong
     {
 
         //Menu items
-        Button playButton, settingsButton, exitButton;
+        Button playButton, settingsButton, exitButton, twitterButton;
+        private string localData; 
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            localData = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "local.json");
+            //File.Delete(localData);
+            if (File.Exists(localData))
+                Settings.loadSettings(localData);
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.main_menu);
@@ -36,7 +41,8 @@ namespace XamarinPong
             playButton = FindViewById<Button>(Resource.Id.btnPlay);
             settingsButton = FindViewById<Button>(Resource.Id.btnSettings);
             exitButton = FindViewById<Button>(Resource.Id.btnExit);
-          
+            twitterButton = FindViewById<Button>(Resource.Id.btnTwitter);
+            UpdateHighscore(Settings.highScore);
 
             playButton.Click += (e, o) =>
             {
@@ -52,10 +58,16 @@ namespace XamarinPong
 
             exitButton.Click += (exitButton, o) =>
             {
-                var activity = (Activity)this;
-                activity.FinishAffinity();
-                
+                Settings.saveSettings(localData);
+                FinishAffinity();
+                FinishAndRemoveTask();
             };
+        }
+
+        public void UpdateHighscore(int score)
+        {
+            if (score > 0)
+                twitterButton.Text = "Share highscore(" + score + ")";
 
         }
 
@@ -69,12 +81,11 @@ namespace XamarinPong
         protected override void OnResume()
         {
             base.OnResume();
+            UpdateHighscore(Settings.highScore);
             if (Pong.inBackground)
                 playButton.Text = "Resume";
             else
                 playButton.Text = "Play";
-        
-                
         }
     }
 }

@@ -3,7 +3,7 @@
   <SourceFile>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/paddle.png</SourceFile>
   <SourceTime>2020-09-15T12:53:42.143565+02:00</SourceTime>
   <DestFile>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/bin/Android/Content/Images/paddle.xnb</DestFile>
-  <DestTime>2020-09-23T10:15:06.9109292+02:00</DestTime>
+  <DestTime>2020-09-24T09:58:23.175384+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

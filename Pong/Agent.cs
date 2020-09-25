@@ -7,7 +7,7 @@ namespace XamarinPong
 {
     public class Agent
     {
-        protected Texture2D sprite;
+        public Texture2D sprite;
         protected Rectangle collision;
         public float momentum;
         

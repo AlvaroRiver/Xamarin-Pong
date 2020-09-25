@@ -20,7 +20,7 @@ namespace XamarinPong
 	public class SettingsActivity : Activity
 	{
 		RadioButton easy, normal, hard;
-		ToggleButton audioToggle;
+		ToggleButton audioToggle, paddleToggle;
 		SeekBar redBar, greenBar, blueBar, playerSelect, ballSelect, sensivityBar, maxScore;
 		ImageView imgPreview;
 		TextView txtPlayerSelect, txtBallSelect, txtMaxScore;
@@ -46,6 +46,8 @@ namespace XamarinPong
 			sensivityBar = FindViewById<SeekBar>(Resource.Id.seekBarSensivity);
 			maxScore = FindViewById<SeekBar>(Resource.Id.seekBarMaxScore);
 			txtMaxScore = FindViewById<TextView>(Resource.Id.txtMaxScore);
+			paddleToggle = FindViewById<ToggleButton>(Resource.Id.togglePaddle);
+
 
 			//Preserve settings after switching screens
 			loadSettings();
@@ -70,9 +72,12 @@ namespace XamarinPong
 
 			audioToggle.CheckedChange += (e, o) =>
 			{
-				if (audioToggle.Checked)
-					Settings.Audio = true;
-				else Settings.Audio = false;
+				Settings.Audio = audioToggle.Checked;
+			};
+
+			paddleToggle.CheckedChange += (e, o) =>
+			{
+				Settings.RightPaddle = paddleToggle.Checked;
 			};
 
 			redBar.ProgressChanged += (e, o) =>
@@ -106,9 +111,8 @@ namespace XamarinPong
 					case 0: { Settings.player = 0; txtPlayerSelect.Text = "Player model: Metallic"; } break;
 					case 1: { Settings.player = 1; txtPlayerSelect.Text = "Player model: Laser"; } break;
 					case 2: { Settings.player = 2; txtPlayerSelect.Text = "Player model: Plank"; } break;
-					default: { Settings.player = 0; txtPlayerSelect.Text = "Player model: Meteor"; } break;
+					default: { Settings.player = 0; txtPlayerSelect.Text = "Player model: Metallic"; } break;
 				}
-
 			};
 
 			ballSelect.ProgressChanged += (e, o) =>
@@ -127,7 +131,6 @@ namespace XamarinPong
 			{
 				Settings.maxScore = maxScore.Progress;
 				txtMaxScore.Text = "Max game points: " + maxScore.Progress;
-
 			};
 		}
 
@@ -143,6 +146,7 @@ namespace XamarinPong
 			}
 
 			audioToggle.Checked = Settings.Audio;
+			paddleToggle.Checked = Settings.RightPaddle;
 
 			redBar.Progress = Settings.R;
 			greenBar.Progress = Settings.G;
@@ -172,7 +176,5 @@ namespace XamarinPong
 
 			imgPreview.SetColorFilter(new Color(redBar.Progress, greenBar.Progress, blueBar.Progress));
 		}
-
-		
 	}
 }
