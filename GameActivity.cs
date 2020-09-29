@@ -25,7 +25,6 @@ namespace XamarinPong
         private Pong pong;
         private View pongView;
 
-  
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -34,7 +33,6 @@ namespace XamarinPong
             pongView = pong.Services.GetService<View>();
             SetContentView(pongView);
             pong.Run();
-
         }
 
         protected override void OnPause()
@@ -53,12 +51,7 @@ namespace XamarinPong
         {
             base.OnStop();
             FinishAffinity();
-
         }
-
-
-
-
     }
 
     

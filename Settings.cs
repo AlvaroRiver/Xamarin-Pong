@@ -24,7 +24,7 @@ namespace XamarinPong
         public static bool Audio = true, RightPaddle = false;
         public static int R = 100, G = 149, B = 247;
         public static int Difficulty = 2, Sensivity = 5;
-        public static int player = 0, ball = 0, maxScore = 5, highScore = 0;
+        public static int player = 0, ball = 0, maxScore = 5, highScore = 0, DebugMode = 0;
 
         public static void loadSettings(string path)
         {
@@ -43,12 +43,14 @@ namespace XamarinPong
             ball = int.Parse(settings[8]);
             maxScore = int.Parse(settings[9]);
             highScore = int.Parse(settings[10]);
+            DebugMode = int.Parse(settings[11]);
         }
 
         public static void saveSettings(string path)
         {
             var json = JsonConvert.SerializeObject(
-                new List<int>() { Audio == false ? 0 : 1 , RightPaddle == false ? 0 : 1 , R,G,B,Difficulty,Sensivity,player,ball,maxScore,highScore }
+                new List<int>() {
+                    Audio == false ? 0 : 1 , RightPaddle == false ? 0 : 1 , R,G,B,Difficulty,Sensivity,player,ball,maxScore,highScore, DebugMode }
                 );
             var writer = File.CreateText(path);
             writer.Write(json);

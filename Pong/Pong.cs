@@ -54,20 +54,16 @@ namespace XamarinPong
             ball.generateBallDirection();
             adjustBallDirection();
 
-            debugMode = true;
-
         }
 
         protected override void LoadContent()
         {
-            
             mainBatch = new SpriteBatch(GraphicsDevice);
             readSettings();
             scoreFont = Content.Load<SpriteFont>("Score");
             promptFont = Content.Load<SpriteFont>("Prompt");
             debugFont = Content.Load<SpriteFont>("DebugFont");
             fieldSprite = Content.Load<Texture2D>("Images/Field");
-
 
             leftPlayer = new Agent(new Point(0, ScreenHeight/2), //Center vertically
                 new Point(ScreenWidth/30, ScreenHeight/5),        //Scale according to screen dimensions
@@ -88,7 +84,6 @@ namespace XamarinPong
         {
             base.Update(gameTime);
             
-
             //Handle Android back button
             if (GamePad.GetState(0).IsButtonDown(Buttons.Back))
             {
@@ -161,7 +156,6 @@ namespace XamarinPong
 
         public void AIPlayerMovement()
         {
-          
             float displacement = (ball.Y - AIplayer.Center.Y);
 
             //Prevent movement from being too sudden
@@ -176,7 +170,6 @@ namespace XamarinPong
                 displacement = 0;
                 
             AIplayer.Translate(0, displacement);
-            
         }
 
         public void BallInteraction()
@@ -193,7 +186,6 @@ namespace XamarinPong
                     ball.X = leftPlayer.X + leftPlayer.Width;
                     if (humanPlayer == leftPlayer)
                         gameScore += Settings.Difficulty;
-                
             }
 
             if (ball.Center.Y >= rightPlayer.Center.Y - rightPlayer.Height / 2 && ball.Center.Y <= rightPlayer.Center.Y + rightPlayer.Height / 2
@@ -211,7 +203,6 @@ namespace XamarinPong
 
         public void Reset()
         {
-
             leftPlayer.Y = ScreenHeight / 2;
             rightPlayer.Y = ScreenHeight / 2 - leftPlayer.Height / 2;
             ball.Position = new Point(ScreenWidth / 2, ScreenHeight / 2);
@@ -222,7 +213,6 @@ namespace XamarinPong
 
             if(resetGame)
                 ResetGame();
-            
         }
 
         public void ResetGame()
@@ -236,7 +226,6 @@ namespace XamarinPong
 
         public void ballMovement(GameTime gameTime)
         {
-
             //Keep in screen bounds and bounce
             if (ball.Y < 0)
             {
@@ -315,9 +304,7 @@ namespace XamarinPong
 
         public void pauseForTime(GameTime gameTime, int seconds)
         {
-            
             resumeTime = (gameTime.TotalGameTime.Seconds + seconds) % 60;
-            
         }
 
         public void readSettings()
@@ -325,6 +312,7 @@ namespace XamarinPong
             themeColor = new Color(Settings.R, Settings.G, Settings.B, 122);
             Sensivity = 10 - Settings.Sensivity;
             gamePoints = Settings.maxScore;
+            debugMode = Settings.DebugMode == 0 ? false : true;
 
             if(!Settings.RightPaddle)
             {

@@ -24,6 +24,7 @@ namespace XamarinPong
 
         //Menu items
         Button playButton, settingsButton, exitButton, twitterButton;
+        EditText twitterPIN;
         private string localData; 
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -42,6 +43,7 @@ namespace XamarinPong
             settingsButton = FindViewById<Button>(Resource.Id.btnSettings);
             exitButton = FindViewById<Button>(Resource.Id.btnExit);
             twitterButton = FindViewById<Button>(Resource.Id.btnTwitter);
+            twitterPIN = FindViewById<EditText>(Resource.Id.editPIN);
             UpdateHighscore(Settings.highScore);
 
             playButton.Click += (e, o) =>
@@ -56,19 +58,46 @@ namespace XamarinPong
                 StartActivity(settings);
             };
 
-            exitButton.Click += (exitButton, o) =>
+            exitButton.Click += (e, o) =>
             {
                 Settings.saveSettings(localData);
                 FinishAffinity();
                 FinishAndRemoveTask();
+                System.Environment.Exit(0);
             };
+
+            twitterButton.Click += (e, o) =>
+            {
+                if(Twitter.loggedIn)
+                {
+                    Twitter.Tweet("Hello there. I scored " + Settings.highScore + " points at #XamarinPong !");
+                }
+                else
+                {
+                    Twitter.LogIn();
+                    twitterPIN.Visibility = ViewStates.Visible;
+                }
+            };
+
+            twitterPIN.TextChanged += (e, o) =>
+            {
+                if (twitterPIN.Text.Length == 4)
+                    Twitter.SetCredentials(twitterPIN.Text);
+                twitterPIN.Visibility = ViewStates.Gone;
+            };
+        }
+
+        //Also save settings when not finishing via Exit button
+        protected override void OnStop()
+        {
+            Settings.saveSettings(localData);
+            base.OnStop();
         }
 
         public void UpdateHighscore(int score)
         {
             if (score > 0)
                 twitterButton.Text = "Share highscore(" + score + ")";
-
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

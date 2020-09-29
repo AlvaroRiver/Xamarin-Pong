@@ -4,18 +4,18 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/DebugFont.spritefont</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/ball.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Ball1.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Ball2.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Ball3.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Field.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/paddle.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Paddle1.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Paddle2.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/Paddle3.png</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Prompt.spritefont</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Score.spritefont</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/DebugFont.spritefont</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/ball.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Ball1.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Ball2.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Ball3.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Field.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/paddle.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Paddle1.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Paddle2.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Images/Paddle3.png</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Prompt.spritefont</File>
+    <File>C:/Users/Alvaro/Source/Repos/Xamarin-Pong/Content/Score.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

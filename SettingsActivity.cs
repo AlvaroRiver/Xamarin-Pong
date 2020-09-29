@@ -20,7 +20,7 @@ namespace XamarinPong
 	public class SettingsActivity : Activity
 	{
 		RadioButton easy, normal, hard;
-		ToggleButton audioToggle, paddleToggle;
+		ToggleButton audioToggle, paddleToggle, debugToggle;
 		SeekBar redBar, greenBar, blueBar, playerSelect, ballSelect, sensivityBar, maxScore;
 		ImageView imgPreview;
 		TextView txtPlayerSelect, txtBallSelect, txtMaxScore;
@@ -29,7 +29,6 @@ namespace XamarinPong
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-
 			SetContentView(Resource.Layout.settings);
 			easy = FindViewById<RadioButton>(Resource.Id.radioEasy);
 			normal = FindViewById<RadioButton>(Resource.Id.radioNormal);
@@ -47,7 +46,7 @@ namespace XamarinPong
 			maxScore = FindViewById<SeekBar>(Resource.Id.seekBarMaxScore);
 			txtMaxScore = FindViewById<TextView>(Resource.Id.txtMaxScore);
 			paddleToggle = FindViewById<ToggleButton>(Resource.Id.togglePaddle);
-
+			debugToggle = FindViewById<ToggleButton>(Resource.Id.toggleDebug);
 
 			//Preserve settings after switching screens
 			loadSettings();
@@ -78,6 +77,11 @@ namespace XamarinPong
 			paddleToggle.CheckedChange += (e, o) =>
 			{
 				Settings.RightPaddle = paddleToggle.Checked;
+			};
+
+			debugToggle.CheckedChange += (e, o) =>
+			{
+				Settings.DebugMode = debugToggle.Checked == false ? 0 : 1;
 			};
 
 			redBar.ProgressChanged += (e, o) =>
@@ -136,7 +140,6 @@ namespace XamarinPong
 
 		public void loadSettings()
         {
-
 			switch (Settings.Difficulty)
 			{
 				case 1: easy.Checked = true; break;
@@ -147,6 +150,7 @@ namespace XamarinPong
 
 			audioToggle.Checked = Settings.Audio;
 			paddleToggle.Checked = Settings.RightPaddle;
+			debugToggle.Checked = Settings.DebugMode == 0 ? false : true;
 
 			redBar.Progress = Settings.R;
 			greenBar.Progress = Settings.G;
