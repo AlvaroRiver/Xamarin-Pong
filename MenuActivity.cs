@@ -13,6 +13,7 @@ using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using Java.Lang;
+using Tweetinvi.Exceptions;
 
 namespace XamarinPong
 {
@@ -68,22 +69,31 @@ namespace XamarinPong
 
             twitterButton.Click += (e, o) =>
             {
-                if(Twitter.loggedIn)
-                {
-                    Twitter.Tweet("Hello there. I scored " + Settings.highScore + " points at #XamarinPong !");
-                }
-                else
-                {
-                    Twitter.LogIn();
-                    twitterPIN.Visibility = ViewStates.Visible;
-                }
+                var uri = Twitter.LogIn();
+                twitterPIN.Visibility = ViewStates.Visible;
+                StartActivity(new Intent(Intent.ActionView, uri));
             };
 
-            twitterPIN.TextChanged += (e, o) =>
+            twitterPIN.AfterTextChanged += (e, o) =>
             {
-                if (twitterPIN.Text.Length == 4)
+                if (twitterPIN.Text.Length == 7)
+                {
                     Twitter.SetCredentials(twitterPIN.Text);
-                twitterPIN.Visibility = ViewStates.Gone;
+                    try
+                    {
+                        Twitter.Tweet("Hello there. I scored " + Settings.highScore + " points at #XamarinPong !");
+                    }
+                    catch (TwitterNullCredentialsException)
+                    {
+                        twitterPIN.Hint = "Incorrect PIN code";
+                        return;
+                    }
+                    finally
+                    {
+                        twitterPIN.Text = "";
+                    }
+                    twitterPIN.Hint = "Score shared!";
+                }
             };
         }
 
@@ -96,8 +106,7 @@ namespace XamarinPong
 
         public void UpdateHighscore(int score)
         {
-            if (score > 0)
-                twitterButton.Text = "Share highscore(" + score + ")";
+            twitterButton.Text = "Share highscore(" + score + ")";
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

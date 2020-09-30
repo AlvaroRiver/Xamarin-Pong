@@ -10,6 +10,9 @@ using Tweetinvi;
 using Tweetinvi.Models;
 using System.Diagnostics;
 using Tweetinvi.Logic;
+using Android.Net;
+using System.Threading.Tasks;
+using Java.Lang;
 
 namespace XamarinPong
 {
@@ -22,11 +25,11 @@ namespace XamarinPong
         private static IAuthenticationContext authenticationContext;
         public static bool loggedIn => userCredentials != null;
 
-        public static void LogIn()
+        public static Android.Net.Uri LogIn()
         {
             var appCredentials = new TwitterCredentials(CONSUMER_KEY, CONSUMER_SECRET);
             authenticationContext = AuthFlow.InitAuthentication(appCredentials);
-            Process.Start(authenticationContext.AuthorizationURL);
+            return Android.Net.Uri.Parse(authenticationContext.AuthorizationURL);
         }
 
         public static void SetCredentials(string PIN)
