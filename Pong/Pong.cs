@@ -288,14 +288,22 @@ namespace XamarinPong
             if ((leftPlayer == humanPlayer && leftPlayerScore == gamePoints) || (rightPlayer == humanPlayer && rightPlayerScore == gamePoints))
             {
                 if(gameScore > Settings.highScore)
+                {
                     prompt = winText + "\n New highscore: " + gameScore;
+                    Settings.highScore = gameScore;
+                }
+                    
                 resetGame = true;
                 
             }
             else if ((leftPlayer == AIplayer && leftPlayerScore == gamePoints) || (rightPlayer == AIplayer && rightPlayerScore == gamePoints))
             {
                 if (gameScore > Settings.highScore)
+                {
                     prompt = loseText + "\n New highscore: " + gameScore;
+                    Settings.highScore = gameScore;
+                }
+                    
                 resetGame = true;
             }
             else
