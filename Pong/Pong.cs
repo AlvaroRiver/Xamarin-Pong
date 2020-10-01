@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Xml;
 
@@ -28,7 +29,8 @@ namespace XamarinPong
             pointText = "Point!", winText ="You win!", loseText= "Game over\nYou Lose", prompt ="";
         private Texture2D fieldSprite;
         private Random random;
-
+        private SoundEffect hitSound, wonPointSound, lostPointSound, wonGameSound, lostGameSound, bounceSound;
+        private SoundEffectInstance hit, wonPoint, lostPoint, wonGame, lostGame, bounce;
 
         public int ScreenWidth => _graphics.GraphicsDevice.Viewport.Width;
         public int ScreenHeight => _graphics.GraphicsDevice.Viewport.Height;
@@ -64,6 +66,7 @@ namespace XamarinPong
             promptFont = Content.Load<SpriteFont>("Prompt");
             debugFont = Content.Load<SpriteFont>("DebugFont");
             fieldSprite = Content.Load<Texture2D>("Images/Field");
+            loadAudio();
 
             leftPlayer = new Agent(new Point(0, ScreenHeight/2), //Center vertically
                 new Point(ScreenWidth/30, ScreenHeight/5),        //Scale according to screen dimensions
@@ -178,25 +181,27 @@ namespace XamarinPong
             if(ball.Center.Y >= leftPlayer.Center.Y-leftPlayer.Height/2 && ball.Center.Y <= leftPlayer.Center.Y + leftPlayer.Height/2 
                 && ball.Center.X < leftPlayer.Width + ball.Width/2)
             {
-                    ball.direction.X = -ball.direction.X;
-                    //Add some randomness to bounce direction
-                    ball.direction.Y = -leftPlayer.momentum * momentumInfluence + (float)random.NextDouble() * 0.5f - 0.25f;
-                    adjustBallDirection();
-                    currentSpeedMod *= speedGain; //Increase speed each time
-                    ball.X = leftPlayer.X + leftPlayer.Width;
-                    if (humanPlayer == leftPlayer)
-                        gameScore += Settings.Difficulty;
+                hit.Play();
+                ball.direction.X = -ball.direction.X;
+                //Add some randomness to bounce direction
+                ball.direction.Y = -leftPlayer.momentum * momentumInfluence + (float)random.NextDouble() * 0.5f - 0.25f;
+                adjustBallDirection();
+                currentSpeedMod *= speedGain; //Increase speed each time
+                ball.X = leftPlayer.X + leftPlayer.Width;
+                if (humanPlayer == leftPlayer)
+                    gameScore += Settings.Difficulty;
             }
 
             if (ball.Center.Y >= rightPlayer.Center.Y - rightPlayer.Height / 2 && ball.Center.Y <= rightPlayer.Center.Y + rightPlayer.Height / 2
                 && ball.Center.X > rightPlayer.Center.X -ball.Width/2 - rightPlayer.Width/2)
             {
-                    ball.direction.X = -ball.direction.X;
-                    ball.direction.Y = -rightPlayer.momentum * momentumInfluence;
-                    adjustBallDirection();
-                    currentSpeedMod *= speedGain; //Increase speed each time
-                    ball.X = rightPlayer.X - ball.Width;
-                    if (humanPlayer == rightPlayer)
+                hit.Play();
+                ball.direction.X = -ball.direction.X;
+                ball.direction.Y = -rightPlayer.momentum * momentumInfluence;
+                adjustBallDirection();
+                currentSpeedMod *= speedGain; //Increase speed each time
+                ball.X = rightPlayer.X - ball.Width;
+                if (humanPlayer == rightPlayer)
                         gameScore += Settings.Difficulty;
             }
         }
@@ -229,21 +234,31 @@ namespace XamarinPong
             //Keep in screen bounds and bounce
             if (ball.Y < 0)
             {
+                bounce.Play();
                 ball.Translate(0, -ball.Y);
                 ball.direction.Y = -ball.direction.Y;
             }
             else if (ball.Y > ScreenHeight - ball.Height)
             {
+                bounce.Play();
                 ball.Translate(0, ScreenHeight - ball.Y - ball.Height);
                 ball.direction.Y = -ball.direction.Y;
             }
 
             if (ball.X < 0)
             {
+                if (humanPlayer != rightPlayer)
+                {
+                    lostPoint.Play();
+                } 
                 ScorePoint(gameTime, rightPlayer);
             }
             else if (ball.X > ScreenWidth - ball.Width)
             {
+                if (humanPlayer != leftPlayer)
+                {
+                    lostPoint.Play();
+                }
                 ScorePoint(gameTime, leftPlayer);
             }
 
@@ -271,7 +286,10 @@ namespace XamarinPong
             {
                 leftPlayerScore++;
                 if (humanPlayer == leftPlayer)
+                {
+                    wonPoint.Play();
                     gameScore += Settings.Difficulty * 10;
+                }
                 pauseForTime(gameTime, 1);
             }
             else if(player == rightPlayer)
@@ -279,9 +297,9 @@ namespace XamarinPong
                 rightPlayerScore++;
                 if (humanPlayer == rightPlayer)
                 {
+                    wonPoint.Play();
                     gameScore += Settings.Difficulty * 10;
                 }
-                   
                 pauseForTime(gameTime, 1);
             }
 
@@ -289,21 +307,21 @@ namespace XamarinPong
             {
                 if(gameScore > Settings.highScore)
                 {
+                    wonGame.Play();
                     prompt = winText + "\n New highscore: " + gameScore;
                     Settings.highScore = gameScore;
                 }
                     
                 resetGame = true;
-                
             }
             else if ((leftPlayer == AIplayer && leftPlayerScore == gamePoints) || (rightPlayer == AIplayer && rightPlayerScore == gamePoints))
             {
                 if (gameScore > Settings.highScore)
                 {
+                    lostGame.Play();
                     prompt = loseText + "\n New highscore: " + gameScore;
                     Settings.highScore = gameScore;
                 }
-                    
                 resetGame = true;
             }
             else
@@ -313,6 +331,23 @@ namespace XamarinPong
         public void pauseForTime(GameTime gameTime, int seconds)
         {
             resumeTime = (gameTime.TotalGameTime.Seconds + seconds) % 60;
+        }
+
+        public void loadAudio()
+        {
+            hitSound = Content.Load<SoundEffect>("Audio/hit");
+            wonPointSound = Content.Load<SoundEffect>("Audio/wonpoint");
+            lostPointSound = Content.Load<SoundEffect>("Audio/lostpoint");
+            wonGameSound = Content.Load<SoundEffect>("Audio/wongame");
+            lostGameSound = Content.Load<SoundEffect>("Audio/lostgame");
+            bounceSound = Content.Load<SoundEffect>("Audio/bounce");
+
+            hit = hitSound.CreateInstance();
+            wonPoint = wonPointSound.CreateInstance();
+            lostPoint = lostPointSound.CreateInstance();
+            wonGame = wonGameSound.CreateInstance();
+            lostGame = lostPointSound.CreateInstance();
+            bounce = bounceSound.CreateInstance();
         }
 
         public void readSettings()
