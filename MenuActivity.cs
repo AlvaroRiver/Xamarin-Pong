@@ -74,7 +74,7 @@ namespace XamarinPong
                 StartActivity(new Intent(Intent.ActionView, uri));
             };
 
-            twitterPIN.AfterTextChanged += (e, o) =>
+            twitterPIN.KeyPress += (e, o) =>
             {
                 if (twitterPIN.Text.Length == 7)
                 {
