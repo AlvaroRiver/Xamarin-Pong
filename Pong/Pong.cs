@@ -94,7 +94,7 @@ namespace XamarinPong
             }
 
             if (gameTime.TotalGameTime.Seconds == 0)
-                resumeTime = 1;
+                resumeTime = 0;
             
             if (!pause && gameTime.TotalGameTime.Seconds > resumeTime)
             {
@@ -305,9 +305,9 @@ namespace XamarinPong
 
             if ((leftPlayer == humanPlayer && leftPlayerScore == gamePoints) || (rightPlayer == humanPlayer && rightPlayerScore == gamePoints))
             {
-                if(gameScore > Settings.highScore)
+                wonGame.Play();
+                if (gameScore > Settings.highScore)
                 {
-                    wonGame.Play();
                     prompt = winText + "\n New highscore: " + gameScore;
                     Settings.highScore = gameScore;
                 }
@@ -316,9 +316,9 @@ namespace XamarinPong
             }
             else if ((leftPlayer == AIplayer && leftPlayerScore == gamePoints) || (rightPlayer == AIplayer && rightPlayerScore == gamePoints))
             {
+                lostGame.Play();
                 if (gameScore > Settings.highScore)
                 {
-                    lostGame.Play();
                     prompt = loseText + "\n New highscore: " + gameScore;
                     Settings.highScore = gameScore;
                 }
