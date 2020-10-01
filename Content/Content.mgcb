@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Audio/bounce.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/bounce.wav
+
 #begin Audio/hit.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -31,11 +37,11 @@
 /processorParam:Quality=Best
 /build:Audio/lostpoint.wav
 
-#begin Audio/wongame.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
+#begin Audio/wongame.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/wongame.mp3
+/build:Audio/wongame.wav
 
 #begin Audio/wonpoint.wav
 /importer:WavImporter

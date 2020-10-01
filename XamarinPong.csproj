@@ -158,6 +158,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Audio\" />
     <Folder Include="Content\Images\" />
   </ItemGroup>
   <ItemGroup>

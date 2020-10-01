@@ -4,10 +4,11 @@
   <Platform>Android</Platform>
   <Config />
   <SourceFiles>
+    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/bounce.wav</File>
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/hit.wav</File>
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/lostgame.wav</File>
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/lostpoint.wav</File>
-    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/wongame.mp3</File>
+    <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/wongame.wav</File>
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Audio/wonpoint.wav</File>
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/DebugFont.spritefont</File>
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Images/ball.png</File>
@@ -23,6 +24,7 @@
     <File>C:/Users/Alvaro/source/repos/Xamarin-Pong/Content/Score.spritefont</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

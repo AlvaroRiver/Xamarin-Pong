@@ -20,7 +20,7 @@ namespace XamarinPong
 	public class SettingsActivity : Activity
 	{
 		RadioButton easy, normal, hard;
-		ToggleButton audioToggle, paddleToggle, debugToggle;
+		ToggleButton paddleToggle, debugToggle;
 		SeekBar redBar, greenBar, blueBar, playerSelect, ballSelect, sensivityBar, maxScore;
 		ImageView imgPreview;
 		TextView txtPlayerSelect, txtBallSelect, txtMaxScore;
@@ -33,7 +33,6 @@ namespace XamarinPong
 			easy = FindViewById<RadioButton>(Resource.Id.radioEasy);
 			normal = FindViewById<RadioButton>(Resource.Id.radioNormal);
 			hard = FindViewById<RadioButton>(Resource.Id.radioHard);
-			audioToggle = FindViewById<ToggleButton>(Resource.Id.toggleAudio);
 			redBar = FindViewById<SeekBar>(Resource.Id.seekBarRed);
 			greenBar = FindViewById<SeekBar>(Resource.Id.seekBarGreen);
 			blueBar = FindViewById<SeekBar>(Resource.Id.seekBlue);
@@ -67,11 +66,6 @@ namespace XamarinPong
 			{
 				if (hard.Checked)
 					Settings.Difficulty = 3;
-			};
-
-			audioToggle.CheckedChange += (e, o) =>
-			{
-				Settings.Audio = audioToggle.Checked;
 			};
 
 			paddleToggle.CheckedChange += (e, o) =>
@@ -148,7 +142,6 @@ namespace XamarinPong
 				default: normal.Checked = true; break;
 			}
 
-			audioToggle.Checked = Settings.Audio;
 			paddleToggle.Checked = Settings.RightPaddle;
 			debugToggle.Checked = Settings.DebugMode == 0 ? false : true;
 
