@@ -102,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameActivity.cs" />
+    <Compile Include="Multiplayer\JoinActivity.cs" />
+    <Compile Include="Multiplayer\HostActivity.cs" />
     <Compile Include="MenuActivity.cs" />
     <Compile Include="Pong\Ball.cs" />
     <Compile Include="Pong\Pong.cs" />

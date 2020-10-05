@@ -9,10 +9,41 @@
     android:padding="40px"
     android:id="@+id/linearLayout1">
     <Button
-        android:text="Play"
+        android:text="Singleplayer"
+        android:layout_width="match_parent"
+        android:layout_height="57.0dp"
+        android:id="@+id/btnPlay"/> 
+    <TextView
+    android:text="MULTIPLAYER"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="16dp"
+    android:textColor="@android:color/white"
+    android:textAlignment="center"
+    android:id="@+id/textView1"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnPlay" />
+        android:id="@+id/linearLayout2" >
+        <Button
+            android:text="Host"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:width="@dimen/design_bottom_navigation_active_item_max_width"
+            android:id="@+id/btnHost" />
+        <Button
+            android:text="Join"
+            android:layout_width="wrap_content"
+           android:width="@dimen/design_bottom_navigation_active_item_max_width"
+            android:layout_height="match_parent"
+            android:id="@+id/btnJoin" />
+    </LinearLayout>
+
+
+
     <Button
         android:text="Settings"
         android:layout_width="match_parent"
