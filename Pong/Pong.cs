@@ -92,7 +92,7 @@ namespace XamarinPong
             //Handle Android back button
             if (GamePad.GetState(0).IsButtonDown(Buttons.Back))
             {
-                Exit();
+                pause = !pause;
             }
 
             if (gameTime.TotalGameTime.Seconds == 0)

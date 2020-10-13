@@ -26,7 +26,7 @@ namespace XamarinPong
     {
 
         //Menu items
-        Button playButton, settingsButton, exitButton, twitterButton, joinButton, hostButton;
+        Button playButton, settingsButton, exitButton, twitterButton, joinButton, hostButton, pinButton;
         EditText twitterPIN;
         private string localData; 
 
@@ -49,6 +49,7 @@ namespace XamarinPong
             twitterPIN = FindViewById<EditText>(Resource.Id.editPIN);
             joinButton = FindViewById<Button>(Resource.Id.btnJoin);
             hostButton = FindViewById<Button>(Resource.Id.btnHost);
+            pinButton = FindViewById<Button>(Resource.Id.btnSendPIN);
             UpdateHighscore(Settings.highScore);
 
             playButton.Click += (e, o) =>
@@ -87,10 +88,11 @@ namespace XamarinPong
             {
                 var uri = Twitter.LogIn();
                 twitterPIN.Visibility = ViewStates.Visible;
+                pinButton.Visibility = ViewStates.Visible;
                 StartActivity(new Intent(Intent.ActionView, uri));
             };
 
-            twitterPIN.KeyPress += (e, o) =>
+            pinButton.Click += (e,o) =>
             {
                 if (twitterPIN.Text.Length == 7)
                 {
@@ -101,14 +103,17 @@ namespace XamarinPong
                     }
                     catch (TwitterNullCredentialsException)
                     {
+                        twitterPIN.Text = "";
                         twitterPIN.Hint = "Incorrect PIN code";
                         return;
                     }
-                    finally
-                    {
-                        twitterPIN.Text = "";
-                    }
+                    twitterPIN.Text = "";
                     twitterPIN.Hint = "Score shared!";
+                }
+                else
+                {
+                    twitterPIN.Text = "";
+                    twitterPIN.Hint = "PIN is 7 digits long";
                 }
             };
         }
