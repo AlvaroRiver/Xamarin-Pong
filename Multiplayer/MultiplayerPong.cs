@@ -12,13 +12,13 @@ using System.Net.Sockets;
 
 namespace XamarinPong
 {
-    public class Pong : Microsoft.Xna.Framework.Game
+    public class MultiplyerPong : Microsoft.Xna.Framework.Game
     {
-
+    
         public static bool inBackground = false;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch mainBatch;
-        private Agent leftPlayer, rightPlayer, humanPlayer, AIplayer;
+        private Agent leftPlayer, rightPlayer, humanPlayer, Opponent;
         private Ball ball;
         private SpriteFont scoreFont, debugFont, promptFont;
         private int leftPlayerScore, rightPlayerScore, gameScore, Sensivity, resumeTime = 1, gamePoints = 5;
@@ -37,8 +37,13 @@ namespace XamarinPong
         public int ScreenWidth => _graphics.GraphicsDevice.Viewport.Width;
         public int ScreenHeight => _graphics.GraphicsDevice.Viewport.Height;
 
+        //Networking
+        public static NetworkStream NetStream;
+        public static bool isHost;
+        byte inByte, outByte;
 
-        public Pong()
+
+        public MultiplyerPong()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -58,6 +63,33 @@ namespace XamarinPong
             ball.generateBallDirection();
             adjustBallDirection();
 
+            if(isHost)
+            {
+                //Sync player positions
+                NetStream.WriteByte(Settings.RightPaddle == true ? (byte)1 : (byte)0);
+                //Sync initial ball direction
+                NetStream.Write(new byte[] { (byte)ball.direction.X, (byte)ball.direction.Y }, 0, 2);
+            }
+            else
+            {
+                var paddle = NetStream.ReadByte();
+                var buff = new byte[2];
+                var ballDir = NetStream.Read(buff, 0, 2);
+                
+                //Sync player positions
+                if (paddle == 1)
+                {
+                    humanPlayer = leftPlayer;
+                    Opponent = rightPlayer;
+                }
+                else
+                {
+                    Opponent = leftPlayer;
+                    humanPlayer = rightPlayer;
+                }
+                //Sync initial ball direction
+                ball.direction = new Vector2(buff[0], buff[1]);
+            }
         }
 
         protected override void LoadContent()
@@ -101,9 +133,9 @@ namespace XamarinPong
             if (!pause && gameTime.TotalGameTime.Seconds > resumeTime)
             {
                 if (mustReset) Reset();
-                humanPlayerMovement();
+                PlayerMovement();
                 ballMovement(gameTime);
-                AIPlayerMovement();
+                OpponentMovement();
                 BallInteraction();
             }
         }
@@ -129,7 +161,7 @@ namespace XamarinPong
             base.Draw(gameTime);
         }
 
-        public void humanPlayerMovement()
+        public void PlayerMovement()
         {
             touchCollection = TouchPanel.GetState();
             if (touchCollection.Count > 0)
@@ -147,7 +179,7 @@ namespace XamarinPong
                     humanPlayer.decayMomentum();
 
                 humanPlayer.Translate(0, displacement);
-
+                NetStream.WriteByte((byte)displacement);
             }
 
             //Keep in screen bounds
@@ -156,25 +188,20 @@ namespace XamarinPong
 
             else if (humanPlayer.Y > ScreenHeight - humanPlayer.Height)
                 humanPlayer.Translate(0, ScreenHeight - humanPlayer.Y - humanPlayer.Height);
-
         }
 
-        public void AIPlayerMovement()
-        {
-            float displacement = (ball.Y - AIplayer.Center.Y);
 
-            //Prevent movement from being too sudden
-            if (displacement > AIspeed)
-                displacement = AIspeed;
-            else if (displacement < -AIspeed)
-                displacement = -AIspeed;
+        public void OpponentMovement()
+        {
+            int displacement = NetStream.ReadByte();
+            Opponent.Translate(0, displacement);
 
             //Keep in screen bounds
-            if ((displacement > 0 && AIplayer.Y + AIplayer.Height >= ScreenHeight) ||
-                    (displacement < 0 && AIplayer.Y <= 0))
-                displacement = 0;
-                
-            AIplayer.Translate(0, displacement);
+            if (Opponent.Y < 0)
+                Opponent.Translate(0, -Opponent.Y);
+
+            else if (Opponent.Y > ScreenHeight - Opponent.Height)
+                Opponent.Translate(0, ScreenHeight - Opponent.Y - Opponent.Height);
         }
 
         public void BallInteraction()
@@ -214,6 +241,19 @@ namespace XamarinPong
             rightPlayer.Y = ScreenHeight / 2 - leftPlayer.Height / 2;
             ball.Position = new Point(ScreenWidth / 2, ScreenHeight / 2);
             ball.generateBallDirection();
+
+            //Sync ball direction
+            if (isHost)
+            {
+                NetStream.Write(new byte[] { (byte)ball.direction.X, (byte)ball.direction.Y }, 0, 2);
+            }
+            else
+            {
+                var buff = new byte[2];
+                var ballDir = NetStream.Read(buff, 0, 2);
+                ball.direction = new Vector2(buff[0], buff[1]);
+            }
+
             currentSpeedMod = 1f;
             prompt = "";
             mustReset = false;
@@ -316,7 +356,7 @@ namespace XamarinPong
                     
                 resetGame = true;
             }
-            else if ((leftPlayer == AIplayer && leftPlayerScore == gamePoints) || (rightPlayer == AIplayer && rightPlayerScore == gamePoints))
+            else if ((leftPlayer == Opponent && leftPlayerScore == gamePoints) || (rightPlayer == Opponent && rightPlayerScore == gamePoints))
             {
                 lostGame.Play();
                 prompt = loseText + "\n New highscore: " + gameScore;
@@ -362,11 +402,11 @@ namespace XamarinPong
             if(!Settings.RightPaddle)
             {
                 humanPlayer = leftPlayer;
-                AIplayer = rightPlayer;
+                Opponent = rightPlayer;
             }
             else
             {
-                AIplayer = leftPlayer;
+                Opponent = leftPlayer;
                 humanPlayer = rightPlayer;
             }
 

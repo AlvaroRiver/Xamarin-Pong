@@ -105,6 +105,7 @@
     <Compile Include="Multiplayer\JoinActivity.cs" />
     <Compile Include="Multiplayer\HostActivity.cs" />
     <Compile Include="MenuActivity.cs" />
+    <Compile Include="Multiplayer\MultiplayerPong.cs" />
     <Compile Include="Pong\Ball.cs" />
     <Compile Include="Pong\Pong.cs" />
     <Compile Include="Pong\Agent.cs" />
@@ -120,6 +121,14 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\Drawable\twitter.png" />
+    <AndroidResource Include="Resources\Layout\host.xml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\Layout\join.xml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
     <AndroidResource Include="Resources\Layout\main_menu.xml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>

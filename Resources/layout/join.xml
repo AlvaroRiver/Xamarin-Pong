@@ -3,15 +3,83 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-     <TextView
-        android:text="Availible games:"
-        android:layout_marginHorizontal="15dp"
+    <TextView
+        android:text="Join Game"
+        android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
         android:textSize="20dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:id="@+id/textJoin" />
+        android:id="@+id/textViewJoining" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:textAlignment="center">
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:text="IP: "
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="49.7dp"
+            android:textSize="20dp"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:id="@+id/textViewIPJoin"
+            android:hint="sdsd"/>
+        <EditText
+            android:inputType="number"
+            android:layout_width="271.7dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editIPJoin"
+            android:layout_marginBottom="0.0dp"
+            android:text=""
+            android:textAlignment="center"
+            android:layout_marginTop="0.0dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2"
+        android:textAlignment="center">
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:text="Port: "
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="49.7dp"
+            android:textSize="20dp"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:id="@+id/textViewPortJoin"
+            android:hint="sdsd"/>
+        <EditText
+            android:inputType="number"
+            android:layout_width="271.7dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editPortJoin"
+            android:layout_marginBottom="0.0dp"
+            android:text="8080"
+            android:textAlignment="center"
+            android:layout_marginTop="0.0dp" />
+    </LinearLayout>
+    <Button
+        android:layout_marginVertical="15dp"
+        android:layout_marginHorizontal="15dp"
+        android:text="JOIN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnJoinGame"
+        android:background="#ff3c645b" />
 
 </LinearLayout>

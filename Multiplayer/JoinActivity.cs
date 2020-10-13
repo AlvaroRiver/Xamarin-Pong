@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 using Android.App;
@@ -15,11 +17,29 @@ namespace XamarinPong
     [Activity(Label = "JoinActivity")]
     public class JoinActivity : Activity
     {
+        //Items
+        TextView IPview;
+        EditText portText, IPtext;
+        Button joinButton;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.join);
 
-            // Create your application here
+            IPview = FindViewById<TextView>(Resource.Id.textViewIPJoin);
+            portText = FindViewById<EditText>(Resource.Id.editPortJoin);
+            IPtext = FindViewById<EditText>(Resource.Id.editIPJoin);
+            joinButton = FindViewById<Button>(Resource.Id.btnJoinGame);
+            IPview.Text = "IP: ";
+
+            joinButton.Click += (e, o) =>
+            {
+                TcpClient client = new TcpClient();
+                client.Connect(IPAddress.Parse(IPtext.Text), int.Parse(portText.Text));
+                MultiplyerPong.NetStream = client.GetStream();
+                MultiplyerPong.isHost = false;
+            };
         }
     }
 }

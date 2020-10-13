@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Android.App;
 using Android.Content;
@@ -24,7 +26,7 @@ namespace XamarinPong
     {
 
         //Menu items
-        Button playButton, settingsButton, exitButton, twitterButton;
+        Button playButton, settingsButton, exitButton, twitterButton, joinButton, hostButton;
         EditText twitterPIN;
         private string localData; 
 
@@ -45,12 +47,26 @@ namespace XamarinPong
             exitButton = FindViewById<Button>(Resource.Id.btnExit);
             twitterButton = FindViewById<Button>(Resource.Id.btnTwitter);
             twitterPIN = FindViewById<EditText>(Resource.Id.editPIN);
+            joinButton = FindViewById<Button>(Resource.Id.btnJoin);
+            hostButton = FindViewById<Button>(Resource.Id.btnHost);
             UpdateHighscore(Settings.highScore);
 
             playButton.Click += (e, o) =>
             {
                 Intent game = new Intent(this, typeof(GameActivity));
                 StartActivity(game);
+            };
+
+            hostButton.Click += (e, o) =>
+            {
+                Intent host = new Intent(this, typeof(HostActivity));
+                StartActivity(host);
+            };
+
+            joinButton.Click += (e, o) =>
+            {
+                Intent join = new Intent(this, typeof(JoinActivity));
+                StartActivity(join);
             };
 
             settingsButton.Click += (e, o) =>
