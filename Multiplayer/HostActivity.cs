@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Database;
 using Android.OS;
 using Android.Widget;
-
 
 namespace XamarinPong
 {
@@ -19,6 +21,7 @@ namespace XamarinPong
         EditText portText;
         Button hostButton;
         TcpClient client;
+        TcpListener server;
 
         public static string GetLocalIPAddress()
         {
@@ -44,32 +47,36 @@ namespace XamarinPong
             hostButton = FindViewById<Button>(Resource.Id.btnStartHost);
             IPview.Text = "IP:     " + GetLocalIPAddress();
 
-            hostButton.Click += (e, o) =>
+            hostButton.Click += async (e, o) =>
             {
+                var cts = new CancellationTokenSource();
+                cts.Token.Register(() => server.Stop());
+                
                 AlertDialog.Builder alertDiag = new AlertDialog.Builder(this);
                 alertDiag.SetTitle("Hosting.");
                 alertDiag.SetMessage(" Waiting for player to connect...");
-
-                TcpListener server = new TcpListener(IPAddress.Any, int.Parse(portText.Text));
-                server.Start();
-                System.Threading.Thread serverThread = new System.Threading.Thread(() =>
-                {
-                    client = server.AcceptTcpClient();
-                    MultiplyerPong.NetStream = client.GetStream();
-                    MultiplyerPong.isHost = true;
-                    alertDiag.Dispose();
-                    Intent multiplayer = new Intent(this, typeof(MultiplyerPong));
-                    StartActivity(multiplayer);
-                });
-                serverThread.Start();
- 
                 alertDiag.SetNegativeButton("Cancel", (senderAlert, args) => {
-                    serverThread.Abort();
-                    server.Stop();
-                    alertDiag.Dispose();
+                    cts.Cancel();
                 });
+                server = new TcpListener(IPAddress.Any, int.Parse(portText.Text));
+                server.Start();
                 Dialog diag = alertDiag.Create();
                 diag.Show();
+
+                try
+                {
+                    client = await Task.Run(() => server.AcceptTcpClientAsync(), cts.Token);
+                }
+                catch (ObjectDisposedException) when (cts.IsCancellationRequested)
+                {
+                    Finish();
+                }
+                alertDiag.Dispose();
+
+                MultiplyerPong.NetStream = client.GetStream();
+                MultiplyerPong.isHost = true;
+                Intent multiplayer = new Intent(this, typeof(MultiplyerPong));
+                StartActivity(multiplayer);
             };
         }
     }

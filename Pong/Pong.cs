@@ -90,10 +90,10 @@ namespace XamarinPong
             base.Update(gameTime);
             
             //Handle Android back button
-            if (GamePad.GetState(0).IsButtonDown(Buttons.Back))
+            /*if (GamePad.GetState(0).IsButtonDown(Buttons.Back))
             {
                 pause = !pause;
-            }
+            }*/
 
             if (gameTime.TotalGameTime.Seconds == 0)
                 resumeTime = 0;
@@ -372,26 +372,38 @@ namespace XamarinPong
 
             switch (Settings.Difficulty)
             {
-                case 1 : { AIspeed = ScreenHeight * 0.01f; difficulty = "Easy"; } break;
-                case 2 : { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
-                case 3 : { AIspeed = ScreenHeight * 0.014f; difficulty = "Hard"; } break;
-                default: { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
+                case 1 :
+                    { AIspeed = ScreenHeight * 0.01f; difficulty = "Easy"; } break;
+                case 2 : 
+                    { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
+                case 3 : 
+                    { AIspeed = ScreenHeight * 0.014f; difficulty = "Hard"; } break;
+                default: 
+                    { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
             }
 
             switch (Settings.player)
             {
-                case 0: playerSprite = "Paddle1"; break;
-                case 1: playerSprite = "Paddle2"; break;
-                case 2: playerSprite = "Paddle3"; break;
-                default: playerSprite = "Paddle1"; break;
+                case 0: 
+                    playerSprite = "Paddle1"; break;
+                case 1:
+                    playerSprite = "Paddle2"; break;
+                case 2: 
+                    playerSprite = "Paddle3"; break;
+                default: 
+                    playerSprite = "Paddle1"; break;
             }
 
            switch (Settings.ball)
             {
-                case 0: ballSprite = "Ball1"; break;
-                case 1: ballSprite = "Ball2"; break;
-                case 2: ballSprite = "Ball3"; break;
-                default: ballSprite = "Ball1"; break;
+                case 0: 
+                    ballSprite = "Ball1"; break;
+                case 1: 
+                    ballSprite = "Ball2"; break;
+                case 2: 
+                    ballSprite = "Ball3"; break;
+                default: 
+                    ballSprite = "Ball1"; break;
             }
         }
     }

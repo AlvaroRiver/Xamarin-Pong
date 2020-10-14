@@ -94,19 +94,8 @@ namespace XamarinPong
 
             pinButton.Click += (e,o) =>
             {
-                if (twitterPIN.Text.Length == 7)
-                {
-                    Twitter.SetCredentials(twitterPIN.Text);
-                    try
-                    {
-                        Twitter.Tweet("Hello there. I scored " + Settings.highScore + " points at #XamarinPong !");
-                    }
-                    catch (TwitterNullCredentialsException)
-                    {
-                        twitterPIN.Text = "";
-                        twitterPIN.Hint = "Incorrect PIN code";
-                        return;
-                    }
+                if(Twitter.SendPIN(pinButton.Text))
+                { 
                     twitterPIN.Text = "";
                     twitterPIN.Hint = "Score shared!";
                 }

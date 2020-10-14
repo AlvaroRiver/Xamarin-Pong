@@ -13,6 +13,8 @@ using Tweetinvi.Logic;
 using Android.Net;
 using System.Threading.Tasks;
 using Java.Lang;
+using Microsoft.Xna.Framework.Media;
+using Tweetinvi.Exceptions;
 
 namespace XamarinPong
 {
@@ -43,6 +45,22 @@ namespace XamarinPong
             Tweetinvi.Tweet.PublishTweet(msg);
         }
 
-
+        public static bool SendPIN(string pin)
+        {
+            if (pin.Length == 7)
+            {
+                SetCredentials(pin);
+                try
+                {
+                    Tweet("Hello there. I scored " + Settings.highScore + " points at #XamarinPong !");
+                    return true;
+                }
+                catch (TwitterNullCredentialsException)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 }

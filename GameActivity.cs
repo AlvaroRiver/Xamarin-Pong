@@ -35,6 +35,11 @@ namespace XamarinPong
             pong.Run();
         }
 
+        public override void OnBackPressed()
+        {
+            base.OnBackPressed();
+        }
+
         protected override void OnPause()
         {
             base.OnPause();
