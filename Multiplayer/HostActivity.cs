@@ -58,6 +58,8 @@ namespace XamarinPong
                     MultiplyerPong.NetStream = client.GetStream();
                     MultiplyerPong.isHost = true;
                     alertDiag.Dispose();
+                    Intent multiplayer = new Intent(this, typeof(MultiplyerPong));
+                    StartActivity(multiplayer);
                 });
                 serverThread.Start();
  

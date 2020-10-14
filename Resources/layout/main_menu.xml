@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -23,7 +28,7 @@
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:id="@+id/textView1"/>
-        <LinearLayout
+    <LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
@@ -32,17 +37,22 @@
         android:id="@+id/linearLayout2" >
         <Button
             android:text="Host"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:width="@dimen/design_bottom_navigation_active_item_max_width"
-            android:id="@+id/btnHost" />
+            android:layout_centerInParent="true"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnHost"/>
         <Button
             android:text="Join"
-            android:layout_width="wrap_content"
-           android:width="@dimen/design_bottom_navigation_active_item_max_width"
-            android:layout_height="match_parent"
+             android:layout_centerInParent="true"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="wrap_content"
             android:id="@+id/btnJoin" />
-        </LinearLayout>
+    </LinearLayout>
+   
+
+ 
         <Button
             android:text="Settings"
             android:layout_width="match_parent"
@@ -78,3 +88,4 @@
             android:id="@+id/btnExit" />
 
 </LinearLayout>
+</ScrollView>

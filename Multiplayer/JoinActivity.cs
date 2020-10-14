@@ -39,6 +39,8 @@ namespace XamarinPong
                 client.Connect(IPAddress.Parse(IPtext.Text), int.Parse(portText.Text));
                 MultiplyerPong.NetStream = client.GetStream();
                 MultiplyerPong.isHost = false;
+                Intent multiplayer = new Intent(this, typeof(MultiplyerPong));
+                StartActivity(multiplayer);
             };
         }
     }
