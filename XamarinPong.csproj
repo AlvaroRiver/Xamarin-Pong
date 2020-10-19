@@ -105,6 +105,7 @@
     <Compile Include="Multiplayer\JoinActivity.cs" />
     <Compile Include="Multiplayer\HostActivity.cs" />
     <Compile Include="MenuActivity.cs" />
+    <Compile Include="Multiplayer\Message.cs" />
     <Compile Include="Multiplayer\MultiplayerActivity.cs" />
     <Compile Include="Multiplayer\MultiplayerPong.cs" />
     <Compile Include="Pong\Ball.cs" />

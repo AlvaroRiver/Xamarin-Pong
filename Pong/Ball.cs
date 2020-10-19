@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
 using System;
 
 
@@ -10,13 +10,25 @@ namespace XamarinPong
     {
         private Random random;
         public Vector2 direction;
-
+        private const float maxVerticalRatio = 1.25f;
+        
         public Ball(Point position, Point size, Texture2D sprite) : base(position, size, sprite) { }
 
         public void generateBallDirection()
         {
             random = new Random();
-            direction = new Vector2((float)random.NextDouble() - 0.5f, ((float)random.NextDouble()) - 0.5f * 0.5f);
+            direction = new Vector2((float)random.NextDouble() - 0.5f, ((float)random.NextDouble()) - 0.5f * 0.5f);         
+        }
+
+        public void adjustBallDirection()
+        {
+            if (direction.Y / direction.X > maxVerticalRatio)
+            {
+                if (direction.Y < 0)
+                    direction.Y = -direction.X * maxVerticalRatio;
+                else
+                    direction.Y = direction.X * maxVerticalRatio;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)

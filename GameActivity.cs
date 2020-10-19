@@ -34,29 +34,6 @@ namespace XamarinPong
             SetContentView(pongView);
             pong.Run();
         }
-
-        public override void OnBackPressed()
-        {
-            base.OnBackPressed();
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-            Pong.inBackground = true;
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-            Pong.inBackground = false;
-        }
-
-        protected override void OnStop()
-        {
-            base.OnStop();
-            FinishAffinity();
-        }
     }
 
     

@@ -1,34 +1,53 @@
-﻿using Android.App;
-using Android.Text.Format;
-using Java.Lang;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Audio;
 using System;
-using System.Xml;
+using System.Diagnostics;
+using Android.Content;
 using System.Net.Sockets;
 
 namespace XamarinPong
 {
     public class Pong : Microsoft.Xna.Framework.Game
     {
-
         public static bool inBackground = false;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch mainBatch;
-        private Agent leftPlayer, rightPlayer, humanPlayer, AIplayer;
+        private Agent leftPlayer, rightPlayer, selfPlayer, AIplayer;
         private Ball ball;
         private SpriteFont scoreFont, debugFont, promptFont;
-        private int leftPlayerScore, rightPlayerScore, gameScore, Sensivity, resumeTime = 1, gamePoints = 5;
+        private Stopwatch timer;
+        private long resumeTime = 500;  //Small pause at start
+        private int leftPlayerScore, rightPlayerScore, gameScore, Sensivity, maxPlayerMovement,
+            gamePoints = 5,
+            scoreMargin = 10,
+            debugMargin = 24,
+            scoreFactor = 10,
+            maxScreenFractionMovement = 12; //Bigger is number is less movement
+
         private Vector2 scorePosition, debugStringPosition, promtPosition;
         private TouchCollection touchCollection;
-        private float AIspeed, ballSpeed = 18f, momentumInfluence = 0.05f, maxVerticalRatio = 1.25f, currentSpeedMod = 1f, speedGain = 1.02f;
+        private float AIspeed,
+            ballSpeed = 18f,
+            momentumInfluence = 0.05f,
+            currentSpeedMod = 1f,
+            easyFactor = 0.01f, 
+            normalFactor = 0.012f, 
+            hardFactor = 0.014f,
+            speedGain = 1.02f;
+
         private bool pause = false, debugMode = false, mustReset = false, resetGame = false;
         private Color themeColor;
-        private string difficulty = "Normal", playerSprite = "Paddle1", ballSprite = "Ball1", 
-            pointText = "Point!", winText ="You win!", loseText= "Game over\nYou Lose", prompt ="";
+        private string
+            difficulty = "Normal",
+            playerSprite = "Paddle1",
+            ballSprite = "Ball1",
+            pointText = "Point!",
+            winText = "You win!",
+            loseText = "Game over\nYou Lose", prompt = "";
+
         private Texture2D fieldSprite;
         private Random random;
         private SoundEffect hitSound, wonPointSound, lostPointSound, wonGameSound, lostGameSound, bounceSound;
@@ -36,28 +55,35 @@ namespace XamarinPong
 
         public int ScreenWidth => _graphics.GraphicsDevice.Viewport.Width;
         public int ScreenHeight => _graphics.GraphicsDevice.Viewport.Height;
+        public Point ScreenCentre;
+
+        //Networking
+        public static NetworkStream NetStream;
+        public enum Mode { SinglePlayer = 0, Host = 1, Guest = 2 };
+        public static Mode mode;
 
 
         public Pong()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            timer = new Stopwatch();
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
             base.Initialize();
+            ScreenCentre = new Point(ScreenWidth / 2, ScreenHeight / 2);
             readSettings();
             random = new Random();
-            scorePosition = new Vector2(ScreenWidth / 2 - ScreenWidth / 20, 10);
-            debugStringPosition = new Vector2(0, ScreenHeight - 24);
-            promtPosition = new Vector2(ScreenWidth /2 - ScreenWidth/20, ScreenHeight / 2);
-
-            //Initial ball direction
+            scorePosition = new Vector2(ScreenCentre.X - ScreenWidth / 20, scoreMargin);
+            debugStringPosition = new Vector2(0, ScreenHeight - debugMargin);
+            promtPosition = new Vector2(ScreenCentre.X - ScreenWidth / 20, ScreenCentre.Y);
+            maxPlayerMovement = ScreenHeight / maxScreenFractionMovement;
             ball.generateBallDirection();
-            adjustBallDirection();
-
+            ball.adjustBallDirection();
+            timer.Start();
         }
 
         protected override void LoadContent()
@@ -70,17 +96,16 @@ namespace XamarinPong
             fieldSprite = Content.Load<Texture2D>("Images/Field");
             loadAudio();
 
-            leftPlayer = new Agent(new Point(0, ScreenHeight/2), //Center vertically
-                new Point(ScreenWidth/30, ScreenHeight/5),        //Scale according to screen dimensions
+            leftPlayer = new Agent(new Point(0, ScreenCentre.Y),  //Center vertically
+                new Point(ScreenWidth / 30, ScreenHeight / 5),        //Scale according to screen dimensions
                 Content.Load<Texture2D>("Images/" + playerSprite));
-            leftPlayer.Translate(0, -leftPlayer.Height / 2); //Adjust player position
 
-            rightPlayer = new Agent(new Point(ScreenWidth, ScreenHeight / 2 - leftPlayer.Height / 2), 
-                new Point(ScreenWidth / 30, ScreenHeight / 5),                             
+            rightPlayer = new Agent(new Point(ScreenWidth, ScreenHeight / 2 - leftPlayer.Height / 2),
+                new Point(ScreenWidth / 30, ScreenHeight / 5),
                 Content.Load<Texture2D>("Images/" + playerSprite));
-            rightPlayer.Translate(-rightPlayer.Width , -leftPlayer.Width / 2); 
+            rightPlayer.Translate(-rightPlayer.Width, -leftPlayer.Width / 2); //Adjust player position
 
-            ball = new Ball(new Point(ScreenWidth/2, ScreenHeight/2),
+            ball = new Ball(new Point(ScreenWidth / 2, ScreenHeight / 2),
                     new Point(ScreenWidth / 30, ScreenWidth / 30),
                     Content.Load<Texture2D>("Images/" + ballSprite));
         }
@@ -88,22 +113,17 @@ namespace XamarinPong
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
-            //Handle Android back button
-            /*if (GamePad.GetState(0).IsButtonDown(Buttons.Back))
+            if (GamePad.GetState(0).IsButtonDown(Buttons.Back)) //Handle Android back button
             {
-                pause = !pause;
-            }*/
+                this.Exit();
+            }
 
-            if (gameTime.TotalGameTime.Seconds == 0)
-                resumeTime = 0;
-            
-            if (!pause && gameTime.TotalGameTime.Seconds > resumeTime)
+            if (!pause && timer.ElapsedMilliseconds > resumeTime)
             {
-                if (mustReset) Reset();
-                humanPlayerMovement();
-                ballMovement(gameTime);
-                AIPlayerMovement();
+                Reset();
+                PlayerMovement();
+                ballMovement();
+                AIMovement();
                 BallInteraction();
             }
         }
@@ -119,119 +139,105 @@ namespace XamarinPong
             ball.Draw(mainBatch);
             mainBatch.DrawString(scoreFont, leftPlayerScore + "  |  " + rightPlayerScore + " " + difficulty + "\nScore: " + gameScore, scorePosition, Color.Black);
             mainBatch.DrawString(promptFont, prompt, promtPosition, Color.Black);
-            if(debugMode)
-            mainBatch.DrawString(debugFont, 
-            ScreenWidth + "x" + ScreenHeight + " Model:" + playerSprite + " RPModel:" + rightPlayer.sprite.Name + " BallDir:" + ball.direction + "Elapsed-Resume: " + gameTime.TotalGameTime.Seconds + "-" + resumeTime
-            ,debugStringPosition, Color.Black);
+
+            if (debugMode)
+                mainBatch.DrawString(debugFont, ScreenWidth + "x" + ScreenHeight + " Model:" + playerSprite + " RPModel:" +
+                rightPlayer.sprite.Name + " BallDir:" + ball.direction + "Elapsed-Resume: " +
+                timer.ElapsedMilliseconds + "-" + resumeTime
+                , debugStringPosition, Color.Black);
 
             mainBatch.End();
-
             base.Draw(gameTime);
         }
 
-        public void humanPlayerMovement()
+        public void PlayerMovement()
         {
             touchCollection = TouchPanel.GetState();
-            if (touchCollection.Count > 0)
-            {
-                //Move player according to touch being over/underneath Y position
-                //Only one finger considered(0 index)
-                int displacement = ((int)touchCollection[0].Position.Y - humanPlayer.Center.Y) / Sensivity;
+            if (touchCollection.Count < 1) return;
 
-                //Prevent movement from being too sudden
-                if (displacement > ScreenHeight / 12)
-                    displacement = ScreenHeight / 12;
-                else if (displacement < -ScreenHeight / 12)
-                    displacement = -ScreenHeight / 12;
-                else
-                    humanPlayer.decayMomentum();
+            //Move player according to touch being over/underneath Y position
+            //Only one finger considered(0 index)
+            int displacement = ((int)touchCollection[0].Position.Y - selfPlayer.Center.Y) / Sensivity;
 
-                humanPlayer.Translate(0, displacement);
+            //Prevent movement from being too sudden
+            displacement = MathHelper.Clamp(displacement, -maxPlayerMovement, maxPlayerMovement);
 
-            }
+            selfPlayer.Translate(0, displacement);
+            selfPlayer.Y = MathHelper.Clamp(selfPlayer.Y, 0, ScreenHeight - selfPlayer.Height);
 
-            //Keep in screen bounds
-            if (humanPlayer.Y < 0)
-                humanPlayer.Translate(0, -humanPlayer.Y);
-
-            else if (humanPlayer.Y > ScreenHeight - humanPlayer.Height)
-                humanPlayer.Translate(0, ScreenHeight - humanPlayer.Y - humanPlayer.Height);
-
+            selfPlayer.decayMomentum();
         }
 
-        public void AIPlayerMovement()
+        public void AIMovement()
         {
             float displacement = (ball.Y - AIplayer.Center.Y);
 
             //Prevent movement from being too sudden
-            if (displacement > AIspeed)
-                displacement = AIspeed;
-            else if (displacement < -AIspeed)
-                displacement = -AIspeed;
+            displacement = MathHelper.Clamp(displacement, -AIspeed, AIspeed);
 
             //Keep in screen bounds
             if ((displacement > 0 && AIplayer.Y + AIplayer.Height >= ScreenHeight) ||
                     (displacement < 0 && AIplayer.Y <= 0))
-                displacement = 0;
-                
-            AIplayer.Translate(0, displacement);
+                return;
+
+            AIplayer.Translate(0, (int)displacement);
         }
 
         public void BallInteraction()
         {
             //Collision check
-            if(ball.Center.Y >= leftPlayer.Center.Y-leftPlayer.Height/2 && ball.Center.Y <= leftPlayer.Center.Y + leftPlayer.Height/2 
-                && ball.Center.X < leftPlayer.Width + ball.Width/2)
+            if (ball.Collides(leftPlayer))
             {
                 hit.Play();
                 ball.direction.X = -ball.direction.X;
                 //Add some randomness to bounce direction
                 ball.direction.Y = -leftPlayer.momentum * momentumInfluence + (float)random.NextDouble() * 0.5f - 0.25f;
-                adjustBallDirection();
+                ball.adjustBallDirection();
                 currentSpeedMod *= speedGain; //Increase speed each time
                 ball.X = leftPlayer.X + leftPlayer.Width;
-                if (humanPlayer == leftPlayer)
+                if (selfPlayer == leftPlayer)
                     gameScore += Settings.Difficulty;
             }
 
-            if (ball.Center.Y >= rightPlayer.Center.Y - rightPlayer.Height / 2 && ball.Center.Y <= rightPlayer.Center.Y + rightPlayer.Height / 2
-                && ball.Center.X > rightPlayer.Center.X -ball.Width/2 - rightPlayer.Width/2)
+            if (ball.Collides(rightPlayer))
             {
                 hit.Play();
                 ball.direction.X = -ball.direction.X;
-                ball.direction.Y = -rightPlayer.momentum * momentumInfluence;
-                adjustBallDirection();
+                ball.direction.Y = -leftPlayer.momentum * momentumInfluence + (float)random.NextDouble() * 0.5f - 0.25f;
+                ball.adjustBallDirection();
                 currentSpeedMod *= speedGain; //Increase speed each time
                 ball.X = rightPlayer.X - ball.Width;
-                if (humanPlayer == rightPlayer)
-                        gameScore += Settings.Difficulty;
+                if (selfPlayer == rightPlayer)
+                    gameScore += Settings.Difficulty;
             }
         }
 
         public void Reset()
         {
-            leftPlayer.Y = ScreenHeight / 2;
-            rightPlayer.Y = ScreenHeight / 2 - leftPlayer.Height / 2;
-            ball.Position = new Point(ScreenWidth / 2, ScreenHeight / 2);
+            if (!mustReset) return;
+            leftPlayer.Y = ScreenCentre.Y;
+            rightPlayer.Y = ScreenCentre.Y - leftPlayer.Height / 2;
+            ball.Position = ScreenCentre;
             ball.generateBallDirection();
             currentSpeedMod = 1f;
             prompt = "";
             mustReset = false;
 
-            if(resetGame)
+            if (resetGame)
                 ResetGame();
         }
 
         public void ResetGame()
         {
-            if(gameScore > Settings.highScore) 
+            if (gameScore > Settings.highScore)
                 Settings.highScore = gameScore;
 
             resetGame = false;
+            prompt = "";
             leftPlayerScore = rightPlayerScore = gameScore = 0;
         }
 
-        public void ballMovement(GameTime gameTime)
+        public void ballMovement()
         {
             //Keep in screen bounds and bounce
             if (ball.Y < 0)
@@ -247,92 +253,72 @@ namespace XamarinPong
                 ball.direction.Y = -ball.direction.Y;
             }
 
-            if (ball.X < 0)
+            if (ball.X <= 0)
             {
-                if (humanPlayer != rightPlayer)
-                {
-                    lostPoint.Play();
-                } 
-                ScorePoint(gameTime, rightPlayer);
+                lostPoint.Play();
+                ScorePoint(rightPlayer);
             }
-            else if (ball.X > ScreenWidth - ball.Width)
+            else if (ball.X >= ScreenWidth)
             {
-                if (humanPlayer != leftPlayer)
-                {
-                    lostPoint.Play();
-                }
-                ScorePoint(gameTime, leftPlayer);
+                lostPoint.Play();
+                ScorePoint(leftPlayer);
             }
 
-            adjustBallDirection();
+            ball.adjustBallDirection();
             ball.direction.Normalize();
             ball.Translate(ball.direction * ballSpeed * currentSpeedMod);
         }
 
-        //We want the ball to move mostly horizontally
-        public void adjustBallDirection()
-        {
-            if (ball.direction.Y / ball.direction.X > maxVerticalRatio)
-            {
-                if (ball.direction.Y < 0)
-                    ball.direction.Y = -ball.direction.X * maxVerticalRatio;
-                else
-                    ball.direction.Y = ball.direction.X * maxVerticalRatio;
-            }
-        }
-
-        public void ScorePoint(GameTime gameTime, Agent player)
+        public void ScorePoint(Agent player)
         {
             mustReset = true;
-            if(player == leftPlayer)
+            prompt = pointText;
+            pauseForTime(1000);
+
+            if (selfPlayer == player)
             {
-                leftPlayerScore++;
-                if (humanPlayer == leftPlayer)
-                {
-                    wonPoint.Play();
-                    gameScore += Settings.Difficulty * 10;
-                }
-                pauseForTime(gameTime, 1);
-            }
-            else if(player == rightPlayer)
-            {
-                rightPlayerScore++;
-                if (humanPlayer == rightPlayer)
-                {
-                    wonPoint.Play();
-                    gameScore += Settings.Difficulty * 10;
-                }
-                pauseForTime(gameTime, 1);
+                wonPoint.Play();
+                gameScore += Settings.Difficulty * scoreFactor;
             }
 
-            if ((leftPlayer == humanPlayer && leftPlayerScore == gamePoints) || (rightPlayer == humanPlayer && rightPlayerScore == gamePoints))
-            {
-                wonGame.Play();
-                prompt = winText + "\n New highscore: " + gameScore;
-                if (gameScore > Settings.highScore)
-                {
-                    Settings.highScore = gameScore;
-                }
-                    
-                resetGame = true;
-            }
-            else if ((leftPlayer == AIplayer && leftPlayerScore == gamePoints) || (rightPlayer == AIplayer && rightPlayerScore == gamePoints))
-            {
-                lostGame.Play();
-                prompt = loseText + "\n New highscore: " + gameScore;
-                if (gameScore > Settings.highScore)
-                {
-                    Settings.highScore = gameScore;
-                }
-                resetGame = true;
-            }
+            if (player == leftPlayer)
+                leftPlayerScore++;
             else
-                prompt = pointText;
+                rightPlayerScore++;
+
+            if (leftPlayerScore == gamePoints)
+                FinishGame(leftPlayer, 1500);
+            else if (rightPlayerScore == gamePoints)
+                FinishGame(rightPlayer, 1500);
+
         }
 
-        public void pauseForTime(GameTime gameTime, int seconds)
+        public void FinishGame(Agent player, int extraPauseMillis = 0)
         {
-            resumeTime = (gameTime.TotalGameTime.Seconds + seconds) % 60;
+            if (player == selfPlayer)
+            {
+                prompt = winText;
+                wonGame.Play();
+            }
+            else
+            {
+                prompt = loseText;
+                lostGame.Play();
+            }
+
+            if (gameScore > Settings.highScore)
+            {
+                Settings.highScore = gameScore;
+                prompt += "\n New highscore: " + gameScore;
+            }
+            resetGame = true;
+            resumeTime += extraPauseMillis; //Extra pause time
+        }
+
+        public void pauseForTime(long millis)
+        {
+            timer.Restart();
+            resumeTime = timer.ElapsedMilliseconds + millis;
         }
 
         public void loadAudio()
@@ -359,50 +345,50 @@ namespace XamarinPong
             gamePoints = Settings.maxScore;
             debugMode = Settings.DebugMode == 0 ? false : true;
 
-            if(!Settings.RightPaddle)
+            if (!Settings.RightPaddle)
             {
-                humanPlayer = leftPlayer;
+                selfPlayer = leftPlayer;
                 AIplayer = rightPlayer;
             }
             else
             {
                 AIplayer = leftPlayer;
-                humanPlayer = rightPlayer;
+                selfPlayer = rightPlayer;
             }
 
             switch (Settings.Difficulty)
             {
-                case 1 :
-                    { AIspeed = ScreenHeight * 0.01f; difficulty = "Easy"; } break;
-                case 2 : 
-                    { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
-                case 3 : 
-                    { AIspeed = ScreenHeight * 0.014f; difficulty = "Hard"; } break;
-                default: 
-                    { AIspeed = ScreenHeight * 0.012f; difficulty = "Normal"; } break;
+                case 1: { AIspeed = ScreenHeight * easyFactor; difficulty = "Easy"; }
+                    break;
+                case 2: { AIspeed = ScreenHeight * normalFactor; difficulty = "Normal"; }
+                    break;
+                case 3: { AIspeed = ScreenHeight * hardFactor; difficulty = "Hard"; }
+                    break;
+                default: { AIspeed = ScreenHeight * normalFactor; difficulty = "Normal"; }
+                    break;
             }
 
             switch (Settings.player)
             {
-                case 0: 
+                case 0:
                     playerSprite = "Paddle1"; break;
                 case 1:
                     playerSprite = "Paddle2"; break;
-                case 2: 
+                case 2:
                     playerSprite = "Paddle3"; break;
-                default: 
+                default:
                     playerSprite = "Paddle1"; break;
             }
 
-           switch (Settings.ball)
+            switch (Settings.ball)
             {
-                case 0: 
+                case 0:
                     ballSprite = "Ball1"; break;
-                case 1: 
+                case 1:
                     ballSprite = "Ball2"; break;
-                case 2: 
+                case 2:
                     ballSprite = "Ball3"; break;
-                default: 
+                default:
                     ballSprite = "Ball1"; break;
             }
         }

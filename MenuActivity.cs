@@ -35,7 +35,6 @@ namespace XamarinPong
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             localData = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "local.json");
-            //File.Delete(localData);
             if (File.Exists(localData))
                 Settings.loadSettings(localData);
 
@@ -130,10 +129,6 @@ namespace XamarinPong
         {
             base.OnResume();
             UpdateHighscore(Settings.highScore);
-            if (Pong.inBackground)
-                playButton.Text = "Resume";
-            else
-                playButton.Text = "Play";
         }
     }
 }

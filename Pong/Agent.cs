@@ -26,6 +26,12 @@ namespace XamarinPong
         {
             this.sprite = sprite;
             collision = new Rectangle(position, size);
+            Y +=  Height / 2;
+        }
+
+        public bool Collides(Agent agent)
+        {
+            return collision.Intersects(agent.collision);
         }
 
         public void Translate(float x, float y)

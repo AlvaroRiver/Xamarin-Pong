@@ -16,8 +16,8 @@ using System.IO;
 using Newtonsoft.Json;
 using Java.Lang;
 
-namespace XamarinPong
-{
+namespace XamarinPong { 
+
     class Settings
     {
         //Initialized at default values
@@ -50,12 +50,9 @@ namespace XamarinPong
         {
             var json = JsonConvert.SerializeObject(
                 new List<int>() {
-                    Audio == false ? 0 : 1 , RightPaddle == false ? 0 : 1 , R,G,B,Difficulty,Sensivity,player,ball,maxScore,highScore, DebugMode }
+                    Audio == false ? 0 : 1 , RightPaddle == false ? 0 : 1 , R,G,B,Difficulty,Sensivity,player,ball,maxScore,highScore,DebugMode }
                 );
-            var writer = File.CreateText(path);
-            writer.Write(json);
-            writer.Flush();
-            writer.Close();
+            File.WriteAllText(path, json);
         }
     }
 }
