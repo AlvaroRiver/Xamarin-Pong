@@ -1,5 +1,5 @@
 # Xamarin-Pong
-Android version for classic arcade game.
+Internship project
 
 
 ## Built with
